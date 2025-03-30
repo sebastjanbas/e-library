@@ -48,3 +48,12 @@ export async function signup(values: z.infer<typeof LoginScema>) {
   revalidatePath('/', 'layout')
   redirect('/')
 } 
+
+export const logout = async () => {
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
+  if (error){
+    console.log("LOGOUT ERROR: ", error)
+  }
+}

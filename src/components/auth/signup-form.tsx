@@ -1,5 +1,6 @@
+
 "use client";
-import { login } from "@/actions/login";
+import { signup } from "@/actions/login";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,24 +11,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginScema } from "@/schemas";
+import { RegisterScema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 
-const LoginForm = () => {
-  const form = useForm<z.infer<typeof LoginScema>>({
-    resolver: zodResolver(LoginScema),
+const SignupForm = () => {
+  const form = useForm<z.infer<typeof RegisterScema>>({
+    resolver: zodResolver(RegisterScema),
     defaultValues: {
       username: "",
+      email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof LoginScema>) => {
-    const response = await login(values) 
+  const onSubmit = async (values: z.infer<typeof RegisterScema>) => {
+    const response = await signup(values) 
     console.log('RESPONSE: ', response)
 
   };
@@ -40,7 +42,20 @@ const LoginForm = () => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username or Email</FormLabel>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="username" type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="m@example.com" type="text" {...field} />
                 </FormControl>
@@ -61,11 +76,11 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <Button variant={"mine"} className="w-full" type="submit">Login</Button>
+          <Button variant={"mine"} className="w-full" type="submit">Sign up</Button>
         </form>
       </Form>
     </div>
   );
 };
 
-export default LoginForm;
+export default SignupForm;
