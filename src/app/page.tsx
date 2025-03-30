@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import LoginForm from "../components/auth/login-form";
+import Clock from "@/components/clock";
 
 export default async function Home() {
   const supabase = await createClient()
@@ -11,6 +12,7 @@ export default async function Home() {
         <h1 className="bg-clip-text text-transparent bg-gradient-to-b from-slate-500 to-white leading-loose text-5xl md:text-6xl xl:text-7xl font-seba2">
           Electronic library
         </h1>
+        <Clock />
         {user && <p>Welcome {user.email}</p>}
         {error && <p className="text-red-500">ERROR: {error.name}</p>}
         <LoginForm />

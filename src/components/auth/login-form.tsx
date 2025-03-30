@@ -28,7 +28,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof LoginScema>) => {
-    console.log("VALUES: ", values);
     const response = await login(values) 
     console.log('RESPONSE: ', response)
 
