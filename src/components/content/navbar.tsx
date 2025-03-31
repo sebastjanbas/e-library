@@ -10,6 +10,7 @@ import {
 import LoginForm from "../auth/login-form";
 import AuthCard from "../auth/auth-card";
 import SignupForm from "../auth/signup-form";
+import Image from "next/image";
 
 const Navbar = () => {
   return (
@@ -35,7 +36,9 @@ const Navbar = () => {
                 </AuthCard>
               </div>
             </div>
-            <div className="bg-blue-500/50 w-full h-full"></div>
+            <div className="w-full h-full overflow-hidden rounded-r-lg">
+              <Image src={"/email-cover.jpg"} width={1980} height={1080} alt="Libary photo" className="object-cover w-full h-full" />
+            </div>
             <div className="absolute text-white bottom-0 left-1/2 translate-x-[-50%] text-center text-sm translate-y-10">
               <p>
                 By clicking continue, you agree to our {" "}
@@ -66,7 +69,9 @@ const Navbar = () => {
                 </AuthCard>
               </div>
             </div>
-            <div className="bg-blue-500/50 w-full h-full"></div>
+            <div className="w-full h-full overflow-hidden rounded-r-lg">
+              <Image src={"/email-cover.jpg"} width={1980} height={1080} alt="Libary photo" className="object-cover w-full h-full" />
+            </div>
             <div className="absolute text-white bottom-0 left-1/2 translate-x-[-50%] text-center text-sm translate-y-10">
               <p>
                 By clicking continue, you agree to our {" "}

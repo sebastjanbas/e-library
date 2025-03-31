@@ -10,6 +10,8 @@ export const LoginScema = z.object({
 });
 
 export const RegisterScema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
   username: z.string().min(3, {
     message: "Username must be at least 3 characters long",
   }),
@@ -17,4 +19,7 @@ export const RegisterScema = z.object({
   password: z.string().min(8, {
     message: "Password must containt at least 8 characters",
   }),
+  confirmPassword: z.string().min(8, {
+    message: "Password must containt at least 8 characters",
+  })
 });

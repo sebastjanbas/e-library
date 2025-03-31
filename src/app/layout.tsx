@@ -8,6 +8,7 @@ import {
   Pacifico,
   Pinyon_Script,
 } from "next/font/google";
+import {Toaster} from "sonner"
 
 export const metadata: Metadata = {
   title: "E-Library",
@@ -46,7 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Toaster />
+        {children}
+      </body>
     </html>
   );
 }
