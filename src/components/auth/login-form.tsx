@@ -12,12 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginScema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { LoaderCircle } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
-
 const LoginForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof LoginScema>>({
     resolver: zodResolver(LoginScema),
     defaultValues: {
@@ -27,9 +29,15 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof LoginScema>) => {
-    const response = await login(values) 
-    console.log('RESPONSE: ', response)
-
+    setIsSubmitting(true);
+    const response = await login(values);
+    if (response.error) {
+      form.resetField("password");
+      toast.error(response.error);
+    } else {
+      toast.success(response.success);
+    }
+    setIsSubmitting(false);
   };
   return (
     <div className="w-full">
@@ -42,7 +50,12 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Username or Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="m@example.com" type="text" {...field} />
+                  <Input
+                    disabled={isSubmitting}
+                    placeholder="m@example.com"
+                    type="text"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -55,13 +68,34 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="******" type="password" {...field} />
+                  <Input
+                    disabled={isSubmitting}
+                    placeholder="******"
+                    type="password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button variant={"mine"} className="w-full" type="submit">Login</Button>
+          <Button
+            disabled={isSubmitting}
+            variant={"mine"}
+            className="w-full"
+            type="submit"
+          >
+            {isSubmitting ? (
+            <>
+                <LoaderCircle className="animate-spin" /> Signing you in ...
+              </>
+
+            ): (
+            <>
+            Login
+            </>
+            )}
+            </Button>
         </form>
       </Form>
     </div>

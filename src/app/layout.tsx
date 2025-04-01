@@ -47,8 +47,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Toaster />
+      <body className="font-seba tracking-tighter ">
+        <Toaster richColors position="top-center" />
         {children}
       </body>
     </html>

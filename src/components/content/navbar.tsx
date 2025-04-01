@@ -14,11 +14,11 @@ import Image from "next/image";
 
 const Navbar = () => {
   return (
-    <div className="fixed overflow-hidden pr-5 md:px-10 flex justify-center items-center top-0 inset-0 h-20 w-full border-b border-[1px] bg-background">
+    <div className="fixed z-50 overflow-hidden pr-5 md:px-10 flex justify-center items-center top-0 inset-0 h-20 w-full border-b border-[1px] bg-background/90">
       <div className="w-full max-w-6xl flex flex-row justify-between items-center">
         <div className="w-44 p-0 m-0 h-auto">
           <Image
-            src={"/logo1.png"}
+            src={"/logo.png"}
             width={512}
             height={512}
             alt="Company Logo"
@@ -33,7 +33,7 @@ const Navbar = () => {
             >
               Log in
             </DialogTrigger>
-            <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[80vh] w-[1000px]">
+            <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[75vh] w-full max-w-[1000px]">
               <div className="flex flex-col justify-center items-center gap-6 p-6">
                 <DialogHeader className="w-full">
                   <DialogTitle className="w-full text-center capitalize">
@@ -49,7 +49,7 @@ const Navbar = () => {
                   </AuthCard>
                 </div>
               </div>
-              <div className="w-full h-full overflow-hidden rounded-r-lg">
+              <div className="hidden md:block w-full h-full overflow-hidden rounded-r-lg">
                 <Image
                   src={"/email-cover.jpg"}
                   width={1980}
@@ -58,7 +58,7 @@ const Navbar = () => {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div className="absolute text-white bottom-0 left-1/2 translate-x-[-50%] text-center text-sm translate-y-10">
+              <div className="absolute text-white bottom-0 w-full text-center text-sm translate-y-12">
                 <p>
                   By clicking continue, you agree to our{" "}
                   <a href="#" className="hover:underline">
@@ -81,11 +81,11 @@ const Navbar = () => {
             >
               Sign up
             </DialogTrigger>
-            <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[80vh] w-[1000px]">
+            <DialogContent className="grid p-0 md:grid-cols-2 h-full max-h-[75vh] w-full max-w-[1000px]">
               <div className="flex flex-col justify-center items-center gap-6 p-6">
                 <DialogHeader className="w-full">
                   <DialogTitle className="capitalize text-center w-full">
-                    Welcome To Digital Library
+                    Welcome To <strong className="text-[#D28E57]">Bookvoult</strong> 
                   </DialogTitle>
                   <DialogDescription className="w-full text-center">
                     Create a new Account
@@ -97,7 +97,7 @@ const Navbar = () => {
                   </AuthCard>
                 </div>
               </div>
-              <div className="w-full h-full overflow-hidden rounded-r-lg">
+              <div className="hidden md:block w-full h-full overflow-hidden rounded-r-lg">
                 <Image
                   src={"/email-cover.jpg"}
                   width={1980}
@@ -106,7 +106,7 @@ const Navbar = () => {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div className="absolute text-white bottom-0 left-1/2 translate-x-[-50%] text-center text-sm translate-y-10">
+              <div className="absolute text-white bottom-0 w-full text-center text-sm translate-y-12">
                 <p>
                   By clicking continue, you agree to our{" "}
                   <a href="#" className="hover:underline">

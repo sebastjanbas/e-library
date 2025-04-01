@@ -6,7 +6,7 @@ import StatsSection from "./stats-section";
 
 const LandingPage = () => {
   return (
-    <div className="w-screen h-fit mt-20">
+    <div className="flex flex-col items-center w-screen h-fit mt-20">
       <HerroSection />
       <FeatureSection />
       <HowItWorksSection />

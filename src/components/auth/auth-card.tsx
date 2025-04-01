@@ -18,7 +18,7 @@ const AuthCard = ({ children }: authcardProps) => {
         <CardFooter className="flex flex-col gap-3 w-full overflow-hidden">
           <div className="flex flex-row items-center gap-1 w-full">
             <div className="h-[1px] w-full bg-foreground opacity-20"></div>
-            <p className="text-sm w-full">Or continue with</p>
+            <p className="text-sm whitespace-nowrap mx-3">Or continue with</p>
             <div className="h-[1px] w-full bg-foreground opacity-20"></div>
           </div>
           <div className="w-full flex flex-row flex-wrap items-center gap-2">

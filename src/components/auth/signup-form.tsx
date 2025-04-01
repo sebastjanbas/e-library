@@ -63,7 +63,7 @@ const SignupForm = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[40vh] md:h-fit overflow-scroll md:overflow-auto p-1">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-row items-center justify-between gap-3">
