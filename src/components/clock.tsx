@@ -21,11 +21,7 @@ const Clock = () => {
 
   return (
     <>
-      <div className="w-full h-full flex text-4xl flex-col justify-center items-center">
-        <p className="w-full text-center pb-5 font-bold font-seba">Testing another paragraph</p>
-        <p className="w-full text-center tracking-widest font-seba2">Testing different fonts with this clock!</p>
-        <div className="font-thin font-seba">{formatedTime}</div>
-      </div>
+      <div className="font-thin text-4xl font-seba">{formatedTime}</div>
     </>
   );
 };

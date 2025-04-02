@@ -2,7 +2,7 @@ import React from "react";
 
 const HowItWorksSection = () => {
   return (
-    <section className="w-full max-w-5xl h-fit flex flex-col gap-5 mb-40 px-5 md:p-0">
+    <section className="w-full max-w-5xl h-fit flex flex-col gap-5 mb-40">
       <h1 className="text-3xl md:text-4xl xl:text-5xl text-center font-semibold mb-8 md:mb-16">
         From Shelf to Screen in Three Simple Steps
       </h1>

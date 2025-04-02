@@ -10,7 +10,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-seba2: 'Pinyon Script';
+  --font-seba2: "Pinyon Script";
   --font-seba: "IBM Plex Mono";
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
