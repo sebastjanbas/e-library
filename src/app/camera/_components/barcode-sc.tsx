@@ -16,15 +16,21 @@ export default function BarcodeScanner() {
   useEffect(() => {
     async function getCameras() {
       try {
+        // Request camera permissions
+        await navigator.mediaDevices.getUserMedia({ video: true });
+
         const mediaDevices = await navigator.mediaDevices.enumerateDevices();
+
         const videoDevices = mediaDevices.filter(
           (device) => device.kind === "videoinput"
         );
-        setDevices(videoDevices);
 
-        // Select first available camera as default
         if (videoDevices.length > 0) {
+          // Set devices and select the first available camera
+          setDevices(videoDevices);
           setSelectedDeviceId(videoDevices[0].deviceId);
+        } else {
+          console.error('No video devices found');
         }
       } catch (error) {
         console.error("Error fetching video devices:", error);
@@ -33,7 +39,6 @@ export default function BarcodeScanner() {
 
     getCameras();
   }, []);
-
   // Start scanning when a device is selected
   useEffect(() => {
     if (!selectedDeviceId || !videoRef.current) return;
