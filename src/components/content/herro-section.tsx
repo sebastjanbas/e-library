@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
+import SignupDialog from "./signup-dialog";
 
 const HerroSection = () => {
   return (
@@ -14,8 +15,10 @@ const HerroSection = () => {
           family - because stories are meant to be shared.
         </p>
         <div className="flex px-5 flex-row justify-center w-full max-w-xl gap-2">
-          <Button className="rounded-full cursor-pointer flex-1">Scan your first book</Button>
-          <Button className="rounded-full cursor-pointer flex-1">Learn More</Button>
+          <SignupDialog trigger="Scan your first book" />
+          <Button className="rounded-full cursor-pointer flex-1">
+            Learn More
+          </Button>
         </div>
       </div>
     </section>
