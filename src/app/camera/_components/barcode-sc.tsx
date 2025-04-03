@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library";
-import { LoaderCircle } from "lucide-react";
+import { Camera, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function BarcodeScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [book, setBook] = useState(null);
+  const [book, setBook] = useState<any>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+  const [resetCounter, setResetCounter] = useState<number>(0);
   const codeReaderRef = useRef(new BrowserMultiFormatReader());
 
   // Fetch available cameras
@@ -22,18 +25,24 @@ export default function BarcodeScanner() {
         const mediaDevices = await navigator.mediaDevices.enumerateDevices();
 
         const videoDevices = mediaDevices.filter(
-          (device) => device.kind === "videoinput",
+          (device) => device.kind === "videoinput"
         );
 
         if (videoDevices.length > 0) {
           // Set devices and select the first available camera
           setDevices(videoDevices);
-          setSelectedDeviceId(videoDevices[0].deviceId);
+          setSelectedDeviceId(
+            (
+              videoDevices.find((device) =>
+                device.label.toLowerCase().includes("back")
+              ) || videoDevices[0]
+            ).deviceId
+          );
         } else {
-          console.error("No video devices found");
+          toast.error("No video devices found");
         }
       } catch (error) {
-        console.error("Error fetching video devices:", error);
+        toast.error("Error fetching video devices: " + error);
       }
     }
 
@@ -59,12 +68,13 @@ export default function BarcodeScanner() {
               codeReader.reset(); // Stop scanning after detection
             }
             if (err && !(err instanceof NotFoundException)) {
-              toast("Scanning error: " + err.message);
+              toast.error("Scanning error: " + err.message);
+              setResetCounter(resetCounter + 1);
             }
-          },
+          }
         );
       } catch (error) {
-        console.error("Scanner error:", error);
+        toast.error("Scanner error: " + error);
       }
     }
 
@@ -73,39 +83,76 @@ export default function BarcodeScanner() {
     return () => {
       codeReader.reset(); // Cleanup when component unmounts or camera changes
     };
-  }, [selectedDeviceId]);
+  }, [selectedDeviceId, resetCounter]);
 
   // Fetch book details
   const fetchBookData = async (isbn: string) => {
     setTimeout(async () => {
-      console.log("Fetching book data...");
       const response = await fetch(
-        "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn,
+        "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn
       );
       const data = await response.json();
       if (data?.items) {
-        console.log("BOOK DATA: ", data?.items[0].volumeInfo);
         setBook(data.items[0].volumeInfo);
       } else {
         toast.error("Could not find the book!");
+        setResetCounter(resetCounter + 1);
       }
       setIsLoading(false);
-    }, 5000);
+    }, 500);
   };
 
   if (book) {
     return (
-      <div className="h-full w-full max-w-7xl">
-        <h2>Formatted JSON Output:</h2>
-        <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-          {JSON.stringify(book, null, 2)}
-        </pre>
-      </div>
+      <>
+        <div className="flex flex-col md:flex-row justify-center items-start mt-20 h-full w-full max-w-7xl">
+          <div className="flex-1 justify-center items-center">
+            {book.imageLinks ? (
+              <img
+                className="w-[200px] justify-self-center h-auto object-contain"
+                src={book.imageLinks.thumbnail}
+                alt={`${book.title} thumbnail`}
+              />
+            ) : (
+              <img
+                className="w-[200px] justify-self-center h-auto object-contain"
+                src="https://placehold.co/128x192?text=Image/nThumbnail"
+                alt="Image thumbnail"
+              />
+            )}
+          </div>
+          <div className="flex-1/2">
+            <p>Title: {book.title}</p>
+            <p>Authors: {book.authors?.join(", ")}</p>
+            <p>Publisher: {book.publisher} </p>
+            <p>Published date: {book.publishedDate}</p>
+            <p className="my-3 ">Description: {book.description}</p>
+            <p>
+              Page count:{" "}
+              {book.pageCount === 0 ? "Not available" : book.pageCount}
+            </p>
+            <p>Type: {book.printType}</p>
+            <p>Categories: {book.categories.join(" ,")}</p>
+            <p>Maturity rating: {book.maturityRating}</p>
+            <p>Language: {book.language}</p>
+            <p>
+              Info link:{" "}
+              <a href={book.infoLink} className="italic underline">
+                google books link
+              </a>
+            </p>
+            <Button className="mt-5 md:hover:scale-105">Confirm Book</Button>
+          </div>
+        </div>
+        {/* <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}> */}
+        {/*   {JSON.stringify(book, null, 2)} */}
+        {/* </pre> */}
+      </>
     );
   }
 
   return (
-    <div className="flex flex-col w-full h-screen justify-start items-center">
+    <div className="relative flex flex-col w-full h-fit justify-start items-center">
       {isLoading ? (
         <span className="inline-flex gap-2">
           <LoaderCircle className="animate-spin" />
@@ -113,27 +160,33 @@ export default function BarcodeScanner() {
         </span>
       ) : (
         <>
-          <div className="relative w-full h-fit">
-            <h2 className="absolute text-white top-5 left-1/2 -translate-x-1/2">
-              Scan a Book ISBN
-            </h2>
-            <div className="absolute left-1/2 -translate-x-1/2 border-[5px] top-1/2 -translate-y-1/2 border-white w-56 h-24 xl:w-96 xl:h-40"></div>
-            <video ref={videoRef} className="aspect-auto xl:aspect-video w-full h-fit" />
+          <h2 className="absolute text-white top-5 left-1/2 -translate-x-1/2">
+            Scan a Book ISBN
+          </h2>
+          <div className="absolute bottom-2 z-50 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center w-full">
+            <div className="flex justify-center items-center border rounded-lg p-2 cursor-pointer bg-white">
+              <Camera className="w-5 h-5 mr-2" />
+              <select
+                className="w-full bg-transparent appearance-none outline-none cursor-pointer"
+                onChange={(e) => setSelectedDeviceId(e.target.value)}
+                value={selectedDeviceId || ""}
+              >
+                {devices.map((device) => (
+                  <option
+                    key={device.deviceId}
+                    value={device.deviceId}
+                    className="text-center"
+                  >
+                    {device.label || `Camera ${device.deviceId}`}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className="flex flex-col justify-center items-center w-full">
-            <h1>Coose a camera</h1>
-            <select
-              className=""
-              onChange={(e) => setSelectedDeviceId(e.target.value)}
-              value={selectedDeviceId || ""}
-            >
-              {devices.map((device) => (
-                <option key={device.deviceId} value={device.deviceId}>
-                  {device.label || `Camera ${device.deviceId}`}
-                </option>
-              ))}
-            </select>
-          </div>
+          <video
+            ref={videoRef}
+            className="aspect-auto xl:aspect-video w-full h-fit"
+          />
         </>
       )}
     </div>
