@@ -5,6 +5,7 @@ import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library";
 import { Camera, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function BarcodeScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,6 +14,8 @@ export default function BarcodeScanner() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [resetCounter, setResetCounter] = useState<number>(0);
+  const [extended, setExtended] = useState(false);
+  const MAX_LENGTH = 150;
   const codeReaderRef = useRef(new BrowserMultiFormatReader());
 
   // Fetch available cameras
@@ -25,7 +28,7 @@ export default function BarcodeScanner() {
         const mediaDevices = await navigator.mediaDevices.enumerateDevices();
 
         const videoDevices = mediaDevices.filter(
-          (device) => device.kind === "videoinput"
+          (device) => device.kind === "videoinput",
         );
 
         if (videoDevices.length > 0) {
@@ -34,9 +37,9 @@ export default function BarcodeScanner() {
           setSelectedDeviceId(
             (
               videoDevices.find((device) =>
-                device.label.toLowerCase().includes("back")
+                device.label.toLowerCase().includes("back"),
               ) || videoDevices[0]
-            ).deviceId
+            ).deviceId,
           );
         } else {
           toast.error("No video devices found");
@@ -71,7 +74,7 @@ export default function BarcodeScanner() {
               toast.error("Scanning error: " + err.message);
               setResetCounter(resetCounter + 1);
             }
-          }
+          },
         );
       } catch (error) {
         toast.error("Scanner error: " + error);
@@ -89,7 +92,7 @@ export default function BarcodeScanner() {
   const fetchBookData = async (isbn: string) => {
     setTimeout(async () => {
       const response = await fetch(
-        "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn
+        "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn,
       );
       const data = await response.json();
       if (data?.items) {
@@ -102,42 +105,85 @@ export default function BarcodeScanner() {
     }, 500);
   };
 
+  const highlightColor = "bg-yellow-300/30";
+
   if (book) {
     return (
       <>
-        <div className="flex flex-col md:flex-row justify-center items-start mt-20 h-full w-full max-w-7xl">
+        <div className="flex flex-col md:flex-row justify-center items-start mt-20 h-full w-full max-w-7xl gap-y-6 md:gap-0">
           <div className="flex-1 justify-center items-center">
             {book.imageLinks ? (
-              <img
+              <Image
                 className="w-[200px] justify-self-center h-auto object-contain"
+                width={128}
+                height={192}
                 src={book.imageLinks.thumbnail}
                 alt={`${book.title} thumbnail`}
               />
             ) : (
               <img
                 className="w-[200px] justify-self-center h-auto object-contain"
-                src="https://placehold.co/128x192?text=Image/nThumbnail"
+                src="https://placehold.co/128x192?text=Image\nThumbnail"
                 alt="Image thumbnail"
               />
             )}
           </div>
           <div className="flex-1/2">
-            <p>Title: {book.title}</p>
-            <p>Authors: {book.authors?.join(", ")}</p>
-            <p>Publisher: {book.publisher} </p>
-            <p>Published date: {book.publishedDate}</p>
-            <p className="my-3 ">Description: {book.description}</p>
-            <p>
-              Page count:{" "}
-              {book.pageCount === 0 ? "Not available" : book.pageCount}
+            <p className="font-bold text-lg">
+              Title: {book?.title ?? "No title"}
             </p>
-            <p>Type: {book.printType}</p>
-            <p>Categories: {book.categories.join(" ,")}</p>
-            <p>Maturity rating: {book.maturityRating}</p>
-            <p>Language: {book.language}</p>
             <p>
-              Info link:{" "}
-              <a href={book.infoLink} className="italic underline">
+              <span className={highlightColor}>Subtitle:</span>{" "}
+              {book?.subtitle ?? "No subtitle"}
+            </p>
+            <p>
+              <span className={highlightColor}>Authors:</span>{" "}
+              {book?.authors?.join(", ") ?? "Unknown"}
+            </p>
+            <p>
+              <span className={highlightColor}>Publisher:</span>{" "}
+              {book.publisher ?? "Unknown"}{" "}
+            </p>
+            <p>
+              <span className={highlightColor}>Published date:</span>{" "}
+              {book?.publishedDate ?? "No date"}
+            </p>
+            <p className="my-3 ">
+              <span className={highlightColor}>Description:</span>{" "}
+              <span className="text-sm md:text-[16px]">
+                {extended
+                  ? (book.description ?? "No description")
+                  : book?.description.slice(0, MAX_LENGTH) + " ..."}
+              </span>
+              <Button variant={"link"} className="cursor-pointer" onClick={() => setExtended(!extended)}>
+                {extended ? "Read less" : "Read more"}
+              </Button>
+            </p>
+            <p>
+              <span className={highlightColor}>Page count:</span>{" "}
+              {book?.pageCount === 0 || book?.pageCount == null
+                ? "Not available"
+                : book.pageCount}
+            </p>
+            <p>
+              <span className={highlightColor}>Type:</span>{" "}
+              {book?.printType ?? "Unknown"}
+            </p>
+            <p>
+              <span className={highlightColor}>Categories:</span>{" "}
+              {book?.categories?.join(" ,") ?? "Unknown"}
+            </p>
+            <p>
+              <span className={highlightColor}>Language:</span>{" "}
+              {book?.language ?? "Unknown"}
+            </p>
+            <p>
+              <span className={highlightColor}>Info link:</span>{" "}
+              <a
+                href={book?.infoLink ?? "#"}
+                target="_blank"
+                className="italic underline"
+              >
                 google books link
               </a>
             </p>

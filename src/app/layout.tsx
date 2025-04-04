@@ -12,6 +12,7 @@ import { Toaster } from "sonner";
 import { createClient } from "@/utils/supabase/server";
 import Navbar from "@/components/content/navbar";
 import LandingPage from "@/components/content/landing-page";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "E-Library",

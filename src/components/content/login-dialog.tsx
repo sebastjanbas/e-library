@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import {
   Dialog,
@@ -11,7 +12,7 @@ import AuthCard from "../auth/auth-card";
 import LoginForm from "../auth/login-form";
 import Image from "next/image";
 
-const LoginDialog = ({ trigger ,navbar }: {trigger: string, navbar?: boolean }) => {
+const LoginDialog = ({isOpen, trigger ,navbar }: {isOpen: boolean, trigger: string, navbar?: boolean }) => {
   let className =
     "cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform";
 
@@ -21,7 +22,7 @@ const LoginDialog = ({ trigger ,navbar }: {trigger: string, navbar?: boolean }) 
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen}>
       <DialogTrigger className={className}>{trigger}</DialogTrigger>
       <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[75vh] w-full max-w-[1000px]">
         <div className="flex flex-col justify-center items-center gap-6 p-6">
