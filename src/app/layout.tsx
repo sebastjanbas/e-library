@@ -13,6 +13,7 @@ import { createClient } from "@/utils/supabase/server";
 import Navbar from "@/components/content/navbar";
 import LandingPage from "@/components/content/landing-page";
 import { redirect } from "next/navigation";
+import DashboardNavbar from "@/components/content/protected/dashboard-navbar";
 
 export const metadata: Metadata = {
   title: "E-Library",
@@ -59,7 +60,10 @@ export default async function RootLayout({
       <body className="font-seba tracking-tighter ">
         <Toaster richColors position="top-center" />
         {user ? (
-          children
+          <>
+            <DashboardNavbar />
+            {children}
+          </>
         ) : (
           <>
             <Navbar />

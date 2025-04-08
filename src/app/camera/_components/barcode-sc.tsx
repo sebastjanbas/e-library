@@ -187,7 +187,8 @@ export default function BarcodeScanner() {
                 google books link
               </a>
             </p>
-            <Button className="mt-5 md:hover:scale-105">Confirm Book</Button>
+            <Button className="mt-5 md:hover:scale-105">Add Book to Library</Button>
+           {/* HACK: create the database table and upload the book data  */}
           </div>
         </div>
         {/* <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}> */}

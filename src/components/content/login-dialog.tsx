@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,11 @@ import {
 import AuthCard from "../auth/auth-card";
 import LoginForm from "../auth/login-form";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
-const LoginDialog = ({isOpen, trigger ,navbar }: {isOpen: boolean, trigger: string, navbar?: boolean }) => {
+const LoginDialog = ({trigger ,navbar }: { trigger: string, navbar?: boolean }) => {
+    const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   let className =
     "cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform";
 
@@ -21,9 +24,16 @@ const LoginDialog = ({isOpen, trigger ,navbar }: {isOpen: boolean, trigger: stri
       "flex-1 text-sm rounded-full bg-primary text-primary-foreground shadow-xs hover:bg-primary/90";
   }
 
+  useEffect(() => {
+    if (pathname !== "/") {
+      setOpen(true)
+    }
+
+  }, [pathname])
+
   return (
-    <Dialog open={isOpen}>
-      <DialogTrigger className={className}>{trigger}</DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger className={className} >{trigger}</DialogTrigger>
       <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[75vh] w-full max-w-[1000px]">
         <div className="flex flex-col justify-center items-center gap-6 p-6">
           <DialogHeader className="w-full">
