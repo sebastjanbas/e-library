@@ -5,6 +5,7 @@ import {
   Bungee_Spice,
   IBM_Plex_Mono,
   Montserrat,
+  Orbitron,
   Pacifico,
   Pinyon_Script,
 } from "next/font/google";
@@ -30,10 +31,11 @@ const pacifico = Pacifico({
   weight: ["400"],
 });
 
-const bungee = Bungee_Spice({
+
+const orbitron = Orbitron({
   subsets: ["latin"],
-  weight: ["400"],
-});
+  weight: ["400", "500", "600", "700", "800", "900"]
+})
 
 const pinyon = Pinyon_Script({
   subsets: ["latin"],

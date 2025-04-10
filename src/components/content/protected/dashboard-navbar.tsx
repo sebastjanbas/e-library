@@ -4,7 +4,7 @@ import LogoutButton from "@/components/auth/logout-button";
 
 const DashboardNavbar = () => {
   return (
-    <div className="fixed top-0 flex flex-row justify-between items-center w-full px-6 py-3 border-b-[1px] border-foreground/10">
+    <div className="fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 flex flex-row justify-between items-center w-full px-6 py-3 border-b-[1px] border-foreground/10">
       <p>Dashboard Navbar</p>
       <div className="flex flex-row gap-2 items-center justify-center">
         <AvatarIcon />
