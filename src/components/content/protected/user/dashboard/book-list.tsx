@@ -1,21 +1,22 @@
-import React from 'react'
+import React from "react";
 
-const SampleBooks = [
-  {id: 1, title: "Great Gatsby", thumbnail: "https://placehold.co/128x192?text=Image\nThumbnail"},
-  {id: 2, title: "Faster Than Lightning", thumbnail: "https://placehold.co/128x192?text=Image\nThumbnail"},
-  {id: 3, title: "Grokking Algorithms", thumbnail: "https://placehold.co/128x192?text=Image\nThumbnail"},
-  {id: 4, title: "Topolino", thumbnail: "https://placehold.co/128x192?text=Image\nThumbnail"},
-]
 
-export const BookList = () => {
+type ListProp = {
+  list: {title:string, cover_url: string }[] | null;
+};
+
+export const BookList = ({ list }: ListProp) => {
   return (
-    <div className='flex flex-row gap-5 items-center justify-evenly w-full'>
-      {SampleBooks.map((book) => (
-      <div key={book.id} className='rounded-md overflow-hidden'>
-          <img src={book.thumbnail} />
-      </div>
+    <div className="flex flex-row flex-wrap gap-5 items-center justify-evenly w-full">
+      {list && list.map((book, i) => (
+        <div key={i} className="rounded-md overflow-hidden shadow-md">
+          <img
+            src={book.cover_url}
+            alt={book.title}
+            className="h-48 w-auto object-cover"
+          />
+        </div>
       ))}
     </div>
-  )
+  );
 }
-

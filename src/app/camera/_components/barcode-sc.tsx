@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { saveBook } from "@/actions/book-actions";
+import { redirect } from "next/navigation";
 
 export default function BarcodeScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -61,6 +62,7 @@ export default function BarcodeScanner() {
       toast.error(response.error);
     } else {
       toast.success(response.success);
+      redirect("/");
     }
   };
 
