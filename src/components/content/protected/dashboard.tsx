@@ -9,7 +9,14 @@ type DashboardProps = {
   user: User | null;
 };
 
-const Dashboard = ({ user }: DashboardProps) => {
+const Dashboard = async ({ user }: DashboardProps) => {
+
+  // TODO: Fix the book display 
+  // const supabase = await createClient()
+  // const {data, error} = await supabase.from("book").select("cover_url")
+
+
+
   return (
     <div className="w-screen h-screen flex flex-col justify-start items-center p-5 xl:p-10">
       {/* TODO: create the dashboard UI */}
@@ -33,7 +40,7 @@ const Dashboard = ({ user }: DashboardProps) => {
         <Stats />
         <div>
           <p>Favorites</p>
-          <BookList />
+
         </div>
         <div>
           <p>Criminals</p>

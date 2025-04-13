@@ -12,7 +12,7 @@ export async function login(values: z.infer<typeof LoginScema>) {
   const supabase = await createClient();
 
   const data = {
-    email: validatedData.data.username,
+    email: validatedData.data.email,
     password: validatedData.data.password,
   };
 
@@ -70,7 +70,6 @@ export async function signup(values: z.infer<typeof RegisterScema>) {
       data: {
         full_name:
           validateField.data.firstName + " " + validateField.data.lastName,
-        username: validateField.data.username,
         // avatar_url: "https://gravatar.com/avatar",
       },
     },

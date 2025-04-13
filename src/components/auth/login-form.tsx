@@ -23,7 +23,7 @@ const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginScema>>({
     resolver: zodResolver(LoginScema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -45,7 +45,7 @@ const LoginForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username or Email</FormLabel>

@@ -28,7 +28,6 @@ const SignupForm = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -104,24 +103,6 @@ const SignupForm = () => {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="username"
-                    type="text"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="email"

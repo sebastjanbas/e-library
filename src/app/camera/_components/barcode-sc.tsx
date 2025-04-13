@@ -6,6 +6,7 @@ import { Camera, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { saveBook } from "@/actions/book-actions";
 
 export default function BarcodeScanner() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -17,6 +18,51 @@ export default function BarcodeScanner() {
   const [extended, setExtended] = useState(false);
   const MAX_LENGTH = 150;
   const codeReaderRef = useRef(new BrowserMultiFormatReader());
+
+  const submitBookInfo = async () => {
+    const {
+      title,
+      subtitle,
+      authors,
+      publisher,
+      publishedDate,
+      description,
+      pageCount,
+      categories,
+      language,
+      infoLink,
+      imageLinks,
+      industryIdentifiers,
+    } = book;
+
+    const thumbnailUrl = imageLinks?.thumbnail;
+    const isbn13 = industryIdentifiers?.[0]?.identifier;
+    const isbn10 = industryIdentifiers?.[1]?.identifier;
+
+    const BookInfo = {
+      title,
+      subtitle,
+      authors,
+      publisher,
+      publishedDate,
+      description,
+      pageCount,
+      categories,
+      language,
+      infoUrl: infoLink,
+      thumbnailUrl,
+      isbn13,
+      isbn10,
+    };
+
+    const response = await saveBook(BookInfo);
+
+    if (response.error) {
+      toast.error(response.error);
+    } else {
+      toast.success(response.success);
+    }
+  };
 
   // Fetch available cameras
   useEffect(() => {
@@ -155,7 +201,11 @@ export default function BarcodeScanner() {
                   ? (book.description ?? "No description")
                   : book?.description.slice(0, MAX_LENGTH) + " ..."}
               </span>
-              <Button variant={"link"} className="cursor-pointer" onClick={() => setExtended(!extended)}>
+              <Button
+                variant={"link"}
+                className="cursor-pointer"
+                onClick={() => setExtended(!extended)}
+              >
                 {extended ? "Read less" : "Read more"}
               </Button>
             </p>
@@ -187,8 +237,12 @@ export default function BarcodeScanner() {
                 google books link
               </a>
             </p>
-            <Button className="mt-5 md:hover:scale-105">Add Book to Library</Button>
-           {/* HACK: create the database table and upload the book data  */}
+            <Button
+              className="mt-5 md:hover:scale-105"
+              onClick={submitBookInfo}
+            >
+              Add Book to Library
+            </Button>
           </div>
         </div>
         {/* <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}> */}
