@@ -28,22 +28,22 @@ const Dashboard = async ({ user }: DashboardProps) => {
     error,
   } = await supabase
     .from("books")
-    .select("title, cover_url", { count: "exact" });
+    .select("*", { count: "exact" });
 
   if (error) {
     toast.error("Error loading books!");
   }
 
-  const SampleBooks = [
-    { title: "Great Gatsby" },
-    { title: "Faster Than Lightning" },
-    { title: "Grokking Algorithms" },
-    { title: "Topolino" },
-    {
-      title:
-        "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
-    },
-  ];
+  // const SampleBooks = [
+  //   { title: "Great Gatsby" },
+  //   { title: "Faster Than Lightning" },
+  //   { title: "Grokking Algorithms" },
+  //   { title: "Topolino" },
+  //   {
+  //     title:
+  //       "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
+  //   },
+  // ];
 
   return (
     <div className="w-screen h-screen flex flex-col justify-start items-center p-5 xl:p-10">
@@ -62,16 +62,16 @@ const Dashboard = async ({ user }: DashboardProps) => {
           <DialogTrigger className="bg-foreground text-background px-4 py-2 rounded-full">
             Add a book
           </DialogTrigger>
-          <DialogContent className="max-w-5xl">
+          <DialogContent className="max-w-3xl">
             <DialogHeader className="w-full flex justify-center items-center">
               <DialogTitle className="text-center">Add a book</DialogTitle>
-              <DialogDescription className="text-center max-w-3xl">
+              <DialogDescription className="text-center max-w-2xl">
                 Description Eleifend et, justo vel sit faucibus faucibus
                 ullamcorper elit magna. Urna faucibus, velit sed vestibulum
                 consectetur suscipit ante aenean, nulla.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-row justify-center items-center gap-5 w-full max-w-xl justify-self-center">
+            <div className="flex flex-row justify-center items-center gap-5 w-full max-w-lg justify-self-center">
               <Button className="flex-1 rounded-full">Manual Add</Button>
               <Button asChild className="flex-1 rounded-full">
                 <Link href={"/camera"}>Scan Add</Link>
@@ -90,15 +90,11 @@ const Dashboard = async ({ user }: DashboardProps) => {
             </div>
             <div>
               <p>Favorites</p>
-              <BookList list={SampleBooks} />
+              <BookList list={allBooks} />
             </div>
             <div>
               <p>Criminals</p>
-              <BookList list={SampleBooks} />
-            </div>
-            <div>
-              <p>Romance</p>
-              <BookList list={SampleBooks} />
+              <BookList list={allBooks} />
             </div>
           </>
         ) : (
