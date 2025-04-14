@@ -26,24 +26,33 @@ const Dashboard = async ({ user }: DashboardProps) => {
     data: allBooks,
     count,
     error,
-  } = await supabase
-    .from("books")
-    .select("*", { count: "exact" });
+  } = await supabase.from("books").select("*", { count: "exact" });
 
   if (error) {
     toast.error("Error loading books!");
   }
 
-  // const SampleBooks = [
-  //   { title: "Great Gatsby" },
-  //   { title: "Faster Than Lightning" },
-  //   { title: "Grokking Algorithms" },
-  //   { title: "Topolino" },
-  //   {
-  //     title:
-  //       "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
-  //   },
-  // ];
+  const SampleBooks = Array.from({ length: 20 }, (_, i) => ({
+  user_id: "sample-user",
+  title: [
+    "Great Gatsby",
+    "Faster Than Lightning",
+    "Grokking Algorithms",
+    "Topolino",
+    "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems"
+  ][i % 5],
+  subtitle: "Sample Subtitle",
+  authors: ["Author One", "Author Two"],
+  publisher: "Sample Publisher",
+  description: "This is a placeholder description for the book.",
+  published_date: "2025-01-01",
+  isbn_10: 1234567890,
+  isbn_13: 9781234567897,
+  page_count: 320,
+  categories: ["Category A", "Category B"],
+  language: "en",
+  info_link: "#",
+}));
 
   return (
     <div className="w-screen h-screen flex flex-col justify-start items-center p-5 xl:p-10">
@@ -84,6 +93,10 @@ const Dashboard = async ({ user }: DashboardProps) => {
         <Stats stats={count ?? 500} author="Agatha Cristie" />
         {count !== 0 ? (
           <>
+            <div>
+              <p>test</p>
+              <BookList list={SampleBooks} />
+            </div>
             <div>
               <p>ALL</p>
               <BookList list={allBooks} />

@@ -11,27 +11,29 @@ import Image from "next/image";
 import React from "react";
 import { SupabaseBookSchema } from "@/schemas";
 import { HorizontalScroller } from "@/components/horizontal-scroll";
+import { BookHoverPopover } from "@/components/content/book-hover-popover";
 
 type ListProp = {
   list: SupabaseBookSchema[] | null;
 };
 
+export const formatTitleForPlaceholder = (title: string, maxLines = 3) => {
+  const words = title.split(" ");
+  const lines: string[] = [];
+
+  for (const word of words) {
+    if (lines.length >= maxLines) break;
+
+    lines.push(word); // no padding
+  }
+
+  const overflow = words.length > maxLines;
+  const text = lines.join("\n") + (overflow ? "\n..." : "");
+
+  return encodeURIComponent(text);
+};
+
 export const BookList = ({ list }: ListProp) => {
-  const formatTitleForPlaceholder = (title: string, maxLines = 3) => {
-    const words = title.split(" ");
-    const lines: string[] = [];
-
-    for (const word of words) {
-      if (lines.length >= maxLines) break;
-
-      lines.push(word); // no padding
-    }
-
-    const overflow = words.length > maxLines;
-    const text = lines.join("\n") + (overflow ? "\n..." : "");
-
-    return encodeURIComponent(text);
-  };
   return (
     <HorizontalScroller itemWidth={128}>
       {list &&
@@ -44,16 +46,7 @@ export const BookList = ({ list }: ListProp) => {
             <Dialog>
               <DialogTrigger asChild>
                 <div className="cursor-pointer">
-                  <Image
-                    src={
-                      book.cover_url ??
-                      `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(book.title)}&font=playfair-display&fontsize=24`
-                    }
-                    width={128}
-                    height={192}
-                    alt={book.title}
-                    className="h-48 w-32 object-cover"
-                  />
+                  <BookHoverPopover book={book} />
                 </div>
               </DialogTrigger>
               <DialogContent className="w-full max-w-3xl">
@@ -67,7 +60,9 @@ export const BookList = ({ list }: ListProp) => {
                   <Image
                     src={
                       book.cover_url ??
-                      `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(book.title)}&font=playfair-display&fontsize=24`
+                      `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
+                        book.title
+                      )}&font=playfair-display&fontsize=24`
                     }
                     width={128}
                     height={192}

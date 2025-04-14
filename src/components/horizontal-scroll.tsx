@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { cn } from "@/lib/utils"; // optional: if using class name merging
+import { cn } from "@/lib/utils";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface HorizontalScrollerProps {
@@ -11,19 +11,56 @@ interface HorizontalScrollerProps {
 
 export const HorizontalScroller = ({
   children,
-  itemWidth = 160,
   className,
 }: HorizontalScrollerProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
 
+  const [hasReachedStart, setReachedStart] = useState(true);
+  const [hasReachedEnd, setReachedEnd] = useState(false);
+
   const scroll = (direction: 1 | -1) => {
     if (!scrollRef.current) return;
-    scrollRef.current.scrollBy({
-      left: direction * itemWidth,
-      behavior: "smooth",
-    });
+
+    const container = scrollRef.current;
+    const scrollAmount = container.clientWidth * 0.8;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+    const currentScroll = container.scrollLeft;
+
+    if (direction === 1) {
+      // Going forward
+      if (hasReachedEnd) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+        setReachedStart(true);
+        setReachedEnd(false);
+      } else {
+        const nextScroll = currentScroll + scrollAmount;
+
+        if (nextScroll >= maxScrollLeft - 5) {
+          setReachedEnd(true);
+        }
+
+        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+        setReachedStart(false);
+      }
+    } else {
+      // Going backward
+      if (hasReachedStart) {
+        container.scrollTo({ left: maxScrollLeft, behavior: "smooth" });
+        setReachedStart(false);
+        setReachedEnd(true);
+      } else {
+        const nextScroll = currentScroll - scrollAmount;
+
+        if (nextScroll <= 5) {
+          setReachedStart(true);
+        }
+
+        container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+        setReachedEnd(false);
+      }
+    }
   };
 
   const startDrag = (e: React.MouseEvent) => {
@@ -57,13 +94,15 @@ export const HorizontalScroller = ({
 
       <button
         onClick={() => scroll(-1)}
-        className="cursor-pointer opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-80 absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
+        onMouseDown={(e) => e.stopPropagation()}
+        className="cursor-pointer opacity-0 group-hover:opacity-80 absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
       >
         <IoIosArrowBack />
       </button>
       <button
         onClick={() => scroll(1)}
-        className="cursor-pointer opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-80 absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
+        onMouseDown={(e) => e.stopPropagation()}
+        className="cursor-pointer opacity-0 group-hover:opacity-80 absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
       >
         <IoIosArrowForward />
       </button>

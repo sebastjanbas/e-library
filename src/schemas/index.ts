@@ -48,7 +48,7 @@ export type SupabaseBookSchema = {
     isbn_10: number,
     isbn_13: number,
     page_count: number,
-    cover_url: string,
+    cover_url?: string,
     categories: string[],
     language: string,
     info_link: string,
