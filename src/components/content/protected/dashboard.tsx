@@ -1,18 +1,26 @@
 import { User } from "@supabase/supabase-js";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Camera } from "lucide-react";
+// import { Camera } from "lucide-react";
 import { Stats } from "./user/dashboard/stats";
 import { BookList } from "./user/dashboard/book-list";
 import { createClient } from "@/utils/supabase/server";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Link from "next/link";
 
 type DashboardProps = {
   user: User | null;
 };
 
 const Dashboard = async ({ user }: DashboardProps) => {
-  // TODO: Fix the book display
   const supabase = await createClient();
   const {
     data: allBooks,
@@ -27,21 +35,13 @@ const Dashboard = async ({ user }: DashboardProps) => {
   }
 
   const SampleBooks = [
+    { title: "Great Gatsby" },
+    { title: "Faster Than Lightning" },
+    { title: "Grokking Algorithms" },
+    { title: "Topolino" },
     {
-      title: "Great Gatsby",
-      cover_url: "https://placehold.co/128x192?text=Image\nThumbnail",
-    },
-    {
-      title: "Faster Than Lightning",
-      cover_url: "https://placehold.co/128x192?text=Image\nThumbnail",
-    },
-    {
-      title: "Grokking Algorithms",
-      cover_url: "https://placehold.co/128x192?text=Image\nThumbnail",
-    },
-    {
-      title: "Topolino",
-      cover_url: "https://placehold.co/128x192?text=Image\nThumbnail",
+      title:
+        "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
     },
   ];
 
@@ -58,11 +58,27 @@ const Dashboard = async ({ user }: DashboardProps) => {
       </div>
       <div className="flex flex-col gap-5 justify-center items-center my-10">
         <p>Scan a book to add it to the library</p>
-        <Button asChild>
-          <a href="/camera">
-            <Camera />
-          </a>
-        </Button>
+        <Dialog>
+          <DialogTrigger className="bg-foreground text-background px-4 py-2 rounded-full">
+            Add a book
+          </DialogTrigger>
+          <DialogContent className="max-w-5xl">
+            <DialogHeader className="w-full flex justify-center items-center">
+              <DialogTitle className="text-center">Add a book</DialogTitle>
+              <DialogDescription className="text-center max-w-3xl">
+                Description Eleifend et, justo vel sit faucibus faucibus
+                ullamcorper elit magna. Urna faucibus, velit sed vestibulum
+                consectetur suscipit ante aenean, nulla.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-row justify-center items-center gap-5 w-full max-w-xl justify-self-center">
+              <Button className="flex-1 rounded-full">Manual Add</Button>
+              <Button asChild className="flex-1 rounded-full">
+                <Link href={"/camera"}>Scan Add</Link>
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="flex flex-col gap-10 w-full">
         <Stats stats={count ?? 500} author="Agatha Cristie" />

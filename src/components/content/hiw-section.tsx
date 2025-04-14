@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const HowItWorksSection = () => {
@@ -14,8 +15,10 @@ const HowItWorksSection = () => {
             <p>Snap a picture or manually enter book details</p>
           </div>
           <div>
-            <img
-              src="https://placehold.co/600x400?text=Demo Image"
+            <Image
+              src="https://placehold.co/600x400/EEE/31343C/png?text=Demo Image&font=playfair-display"
+              width={600}
+              height={400}
               alt="Demo Image"
             />
           </div>
@@ -27,8 +30,10 @@ const HowItWorksSection = () => {
             <p>Let the app find the book for you or add custom information.</p>
           </div>
           <div>
-            <img
-              src="https://placehold.co/600x400?text=Demo Image"
+            <Image
+              src="https://placehold.co/600x400/EEE/31343C/png?text=Demo Image&font=playfair-display"
+              width={600}
+              height={400}
               alt="Demo Image"
             />
           </div>
@@ -40,8 +45,10 @@ const HowItWorksSection = () => {
             <p>Sort into libraries, add tags, and share with friends.</p>
           </div>
           <div>
-            <img
-              src="https://placehold.co/600x400?text=Demo Image"
+            <Image
+              src="https://placehold.co/600x400/EEE/31343C/png?text=Demo Image&font=playfair-display"
+              width={600}
+              height={400}
               alt="Demo Image"
             />
           </div>

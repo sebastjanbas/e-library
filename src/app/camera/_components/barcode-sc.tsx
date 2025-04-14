@@ -169,9 +169,11 @@ export default function BarcodeScanner() {
                 alt={`${book.title} thumbnail`}
               />
             ) : (
-              <img
+              <Image
                 className="w-[200px] justify-self-center h-auto object-contain"
-                src="https://placehold.co/128x192?text=Image\nThumbnail"
+                src="https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
+                width={128}
+                height={192}
                 alt="Image thumbnail"
               />
             )}
@@ -197,19 +199,25 @@ export default function BarcodeScanner() {
               {book?.publishedDate ?? "No date"}
             </p>
             <p className="my-3 ">
-              <span className={highlightColor}>Description:</span>{" "}
-              <span className="text-sm md:text-[16px]">
-                {extended
-                  ? (book.description ?? "No description")
-                  : book?.description.slice(0, MAX_LENGTH) + " ..."}
-              </span>
-              <Button
-                variant={"link"}
-                className="cursor-pointer"
-                onClick={() => setExtended(!extended)}
-              >
-                {extended ? "Read less" : "Read more"}
-              </Button>
+              {book.description ? (
+                <>
+                  <span className={highlightColor}>Description:</span>{" "}
+                  <span className="text-sm md:text-[16px]">
+                    {extended
+                      ? book.description
+                      : book?.description.slice(0, MAX_LENGTH) + " ..."}
+                  </span>
+                  <Button
+                    variant={"link"}
+                    className="cursor-pointer"
+                    onClick={() => setExtended(!extended)}
+                  >
+                    {extended ? "Read less" : "Read more"}
+                  </Button>
+                </>
+              ) : (
+                <p>No description</p>
+              )}
             </p>
             <p>
               <span className={highlightColor}>Page count:</span>{" "}
