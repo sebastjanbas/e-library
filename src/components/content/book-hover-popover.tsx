@@ -13,7 +13,7 @@ import { formatTitleForPlaceholder } from "./protected/user/dashboard/book-list"
 export const BookHoverPopover = ({ book }: { book: SupabaseBookSchema }) => {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -21,7 +21,7 @@ export const BookHoverPopover = ({ book }: { book: SupabaseBookSchema }) => {
           onMouseEnter={() => {
             timeoutRef.current = setTimeout(() => {
               setOpen(true);
-            }, 1500);
+            }, 500);
           }}
           onMouseLeave={() => {
             if (timeoutRef.current) {
@@ -40,7 +40,7 @@ export const BookHoverPopover = ({ book }: { book: SupabaseBookSchema }) => {
             width={128}
             height={192}
             alt={book.title}
-            className="h-48 w-32 object-cover rounded-md"
+            className="h-48 w-32 md:h-[288px] md:w-[192px] object-cover rounded-md"
           />
         </div>
       </PopoverTrigger>
@@ -49,7 +49,7 @@ export const BookHoverPopover = ({ book }: { book: SupabaseBookSchema }) => {
         onMouseLeave={() => setOpen(false)}
         side="top"
         align="center"
-        sideOffset={-200}
+        sideOffset={-300}
         className="w-[300px] p-4 bg-background shadow-xl rounded-xl transition-all duration-200"
       >
         <Image

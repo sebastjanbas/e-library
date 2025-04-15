@@ -33,30 +33,29 @@ const Dashboard = async ({ user }: DashboardProps) => {
   }
 
   const SampleBooks = Array.from({ length: 20 }, (_, i) => ({
-  user_id: "sample-user",
-  title: [
-    "Great Gatsby",
-    "Faster Than Lightning",
-    "Grokking Algorithms",
-    "Topolino",
-    "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems"
-  ][i % 5],
-  subtitle: "Sample Subtitle",
-  authors: ["Author One", "Author Two"],
-  publisher: "Sample Publisher",
-  description: "This is a placeholder description for the book.",
-  published_date: "2025-01-01",
-  isbn_10: 1234567890,
-  isbn_13: 9781234567897,
-  page_count: 320,
-  categories: ["Category A", "Category B"],
-  language: "en",
-  info_link: "#",
-}));
+    user_id: "sample-user",
+    title: [
+      "Great Gatsby",
+      "Faster Than Lightning",
+      "Grokking Algorithms",
+      "Topolino",
+      "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
+    ][i % 5],
+    subtitle: "Sample Subtitle",
+    authors: ["Author One", "Author Two"],
+    publisher: "Sample Publisher",
+    description: "This is a placeholder description for the book.",
+    published_date: "2025-01-01",
+    isbn_10: 1234567890,
+    isbn_13: 9781234567897,
+    page_count: 320,
+    categories: ["Category A", "Category B"],
+    language: "en",
+    info_link: "#",
+  }));
 
   return (
     <div className="w-screen h-screen flex flex-col justify-start items-center p-5 xl:p-10">
-      {/* TODO: create the dashboard UI */}
       <div className="mt-20 flex flex-row justify-start items-center w-full gap-10">
         <p>
           Welcome{" "}
@@ -68,22 +67,23 @@ const Dashboard = async ({ user }: DashboardProps) => {
       <div className="flex flex-col gap-5 justify-center items-center my-10">
         <p>Scan a book to add it to the library</p>
         <Dialog>
-          <DialogTrigger className="bg-foreground text-background px-4 py-2 rounded-full">
+          <DialogTrigger className="bg-foreground cursor-pointer text-background px-4 py-2 rounded-full">
             Add a book
           </DialogTrigger>
           <DialogContent className="max-w-3xl">
             <DialogHeader className="w-full flex justify-center items-center">
-              <DialogTitle className="text-center">Add a book</DialogTitle>
+              <DialogTitle className="text-center">Add a new book</DialogTitle>
               <DialogDescription className="text-center max-w-2xl">
-                Description Eleifend et, justo vel sit faucibus faucibus
-                ullamcorper elit magna. Urna faucibus, velit sed vestibulum
-                consectetur suscipit ante aenean, nulla.
+                Choose how you’d like to add your book to the library.
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-row justify-center items-center gap-5 w-full max-w-lg justify-self-center">
-              <Button className="flex-1 rounded-full">Manual Add</Button>
+              {/* FIX: add the manual input */}
+              <Button className="flex-1 cursor-pointer rounded-full" asChild>
+                <Link href={"/add-book"}>Enter Details Manually</Link>
+              </Button>
               <Button asChild className="flex-1 rounded-full">
-                <Link href={"/camera"}>Scan Add</Link>
+                <Link href={"/camera"}>Scan Book ISBN</Link>
               </Button>
             </div>
           </DialogContent>

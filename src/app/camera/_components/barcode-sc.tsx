@@ -251,6 +251,7 @@ export default function BarcodeScanner() {
               className="mt-5 md:hover:scale-105"
               onClick={submitBookInfo}
             >
+              {/* FIX: Add the selection option (or create new) */}
               Add Book to Library
             </Button>
           </div>
@@ -270,7 +271,7 @@ export default function BarcodeScanner() {
           Looking for the book ...
         </span>
       ) : (
-        <>
+        <div className="mt-5 md:mt-20">
           <h2 className="absolute text-white top-5 left-1/2 -translate-x-1/2">
             Scan a Book ISBN
           </h2>
@@ -298,7 +299,7 @@ export default function BarcodeScanner() {
             ref={videoRef}
             className="aspect-auto xl:aspect-video w-full h-fit"
           />
-        </>
+        </div>
       )}
     </div>
   );

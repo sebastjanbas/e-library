@@ -24,15 +24,15 @@ export const RegisterScema = z.object({
 export const BookSchema = z.object({
   title: z.string(),
   subtitle: z.string(),
-  authors: z.string().array(),
+  authors: z.array(z.string()),
   publisher: z.string(),
-  publishedDate: z.date(),
+  publishedDate: z.string(),
   isbn10: z.string(),
   isbn13: z.string(),
   pageCount: z.number(),
   thumbnailUrl: z.string().url(),
   description: z.string(),
-  categories: z.string().array(),
+  categories: z.array(z.string()),
   language: z.string(),
   infoUrl: z.string().url(),
 })

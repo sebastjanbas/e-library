@@ -95,14 +95,14 @@ export const HorizontalScroller = ({
       <button
         onClick={() => scroll(-1)}
         onMouseDown={(e) => e.stopPropagation()}
-        className="cursor-pointer opacity-0 group-hover:opacity-80 absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
+        className="hidden md:block cursor-pointer opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-80 absolute left-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
       >
         <IoIosArrowBack />
       </button>
       <button
         onClick={() => scroll(1)}
         onMouseDown={(e) => e.stopPropagation()}
-        className="cursor-pointer opacity-0 group-hover:opacity-80 absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
+        className="hidden md:block cursor-pointer opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-80 absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 text-white px-1 py-5 rounded-full hover:bg-black z-10"
       >
         <IoIosArrowForward />
       </button>
