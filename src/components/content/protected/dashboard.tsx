@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
+import { BookCategories } from "@/lib/docs";
 
 type DashboardProps = {
   user: User | null;
@@ -101,14 +102,22 @@ const Dashboard = async ({ user }: DashboardProps) => {
               <p>ALL</p>
               <BookList list={allBooks} />
             </div>
-            <div>
-              <p>Favorites</p>
-              <BookList list={allBooks} />
-            </div>
-            <div>
-              <p>Criminals</p>
-              <BookList list={allBooks} />
-            </div>
+            {BookCategories.filter((category) =>
+              allBooks?.some((book) =>
+                book.categories?.some((cat:string) => cat.toLowerCase() === category),
+              ),
+            ).map((category, i) => (
+              <div key={i}>
+                <p className="capitalize">{category}</p>
+                <BookList
+                  list={allBooks && allBooks?.filter((book) =>
+                    book.categories?.some(
+                      (cat:string) => cat.toLowerCase() === category,
+                    ),
+                  )}
+                />
+              </div>
+            ))}
           </>
         ) : (
           <p>Add your first book to see statistics</p>
