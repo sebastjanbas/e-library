@@ -68,6 +68,8 @@ export async function signup(values: z.infer<typeof RegisterScema>) {
     password: validateField.data.password,
     options: {
       data: {
+        first_name: validateField.data.firstName,
+        last_name: validateField.data.lastName,
         full_name:
           validateField.data.firstName + " " + validateField.data.lastName,
         // avatar_url: "https://gravatar.com/avatar",

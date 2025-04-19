@@ -11,7 +11,7 @@ const AccountOverviewPage = () => {
         <p>Account Details</p>
       </div>
       <div className="flex flex-col border-[1px] border-foreground/20 rounded-md">
-        <div className="bg-gradient-to-r my-5 rounded-r-full w-60 text-center text-sm text-white from-blue-500 to-red-500 p-2">
+        <div className="-translate-x-1 bg-gradient-to-r my-5 rounded-r-full w-60 text-center text-sm text-white from-blue-500 to-red-500 p-2">
           Member since June 2019
         </div>
         <div className="px-5 pb-3 flex flex-col">
@@ -27,6 +27,9 @@ const AccountOverviewPage = () => {
             Manage membership <IoIosArrowForward />
           </div>
         </Link>
+      </div>
+      <div className="my-10">
+        Quick links
       </div>
     </div>
   );

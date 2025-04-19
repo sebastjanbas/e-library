@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CreditCard, Home, ShieldCheck } from "lucide-react";
+import { ArrowLeftIcon, CreditCard, Home, ShieldCheck, User } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -18,6 +18,15 @@ const AccountLayout = ({ children }: { children: React.ReactNode }) => {
           >
             <Home />
             Overview
+          </Link>
+        </div>
+        <div className="w-[80%] rounded-lg hover:bg-foreground/10 p-3 cursor-pointer">
+          <Link
+            className="inline-flex gap-2 w-full h-full"
+            href={"/account/profile"}
+          >
+            <User />
+            Edit Profile
           </Link>
         </div>
         <div className="w-[80%] rounded-lg hover:bg-foreground/10 p-3 cursor-pointer">

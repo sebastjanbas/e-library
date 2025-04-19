@@ -51,7 +51,7 @@ const Dashboard = async ({ user }: UserType) => {
         <p>
           Welcome{" "}
           <span className="font-semibold italic">
-            {user?.user_metadata.full_name.split(" ")[0] ?? "ERROR"}
+            {user?.user_metadata.first_name ?? "ERROR"}
           </span>
         </p>
       </div>

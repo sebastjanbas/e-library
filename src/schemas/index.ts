@@ -18,7 +18,7 @@ export const RegisterScema = z.object({
   }),
   confirmPassword: z.string().min(8, {
     message: "Password must containt at least 8 characters",
-  })
+  }),
 });
 
 export const BookSchema = z.object({
@@ -35,23 +35,27 @@ export const BookSchema = z.object({
   categories: z.array(z.string()),
   language: z.string(),
   infoUrl: z.string().url(),
-})
+});
 
 export type SupabaseBookSchema = {
-    user_id: string, 
-    title: string,
-    subtitle: string,
-    authors: string[],
-    publisher: string,
-    description: string,
-    published_date: string,
-    isbn_10: number,
-    isbn_13: number,
-    page_count: number,
-    cover_url?: string,
-    categories: string[],
-    language: string,
-    info_link: string,
+  user_id: string;
+  title: string;
+  subtitle: string;
+  authors: string[];
+  publisher: string;
+  description: string;
+  published_date: string;
+  isbn_10: number;
+  isbn_13: number;
+  page_count: number;
+  cover_url?: string;
+  categories: string[];
+  language: string;
+  info_link: string;
+};
 
-}
-
+export const ProfileInfoSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string(),
+});
