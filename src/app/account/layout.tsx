@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 const AccountLayout = ({ children }: { children: React.ReactNode }) => {
+  // FIX: Fix the mobile version of the settings
   return (
     <div className="mt-20 flex flex-row p-5 justify-self-center justify-center items-start w-full max-w-6xl">
       <div className="flex-1/5 flex flex-col gap-5">
