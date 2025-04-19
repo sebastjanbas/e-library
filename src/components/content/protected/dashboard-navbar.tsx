@@ -1,17 +1,95 @@
+"use client";
 import React from "react";
-import AvatarIcon from "./user/avatar-icon";
-import LogoutButton from "@/components/auth/logout-button";
 import Link from "next/link";
+import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { UserType } from "./dashboard";
+import { LogOut, User } from "lucide-react";
+import { logout } from "@/actions/login";
 
-const DashboardNavbar = () => {
+const DashboardNavbar = ({ user }: UserType) => {
+  const handleClick = async () => {
+    const response = await logout();
+    if (response.success) {
+      window.location.href = "/";
+    }
+  };
+
   return (
-    <div className="fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 flex flex-row justify-between items-center w-full px-6 py-3 border-b-[1px] border-foreground/10">
-      <Link href={"/"}>
-        <p>Dashboard Navbar</p>
-      </Link>
+    <div className="fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 max-w-5xl left-[50%] -translate-x-[50%] flex flex-row justify-between items-center w-full px-6 py-3">
+      <div className="w-44 p-0 m-0 h-auto">
+        <Link href={"/"}>
+          <Image
+            src={"/logo.png"}
+            width={512}
+            height={512}
+            alt="Company Logo"
+          />
+        </Link>
+      </div>
       <div className="flex flex-row gap-2 items-center justify-center">
-        <AvatarIcon />
-        <LogoutButton />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="h-9 w-9 rounded-lg cursor-pointer">
+              <AvatarImage
+                src={user?.user_metadata.avatar_url}
+                alt={user?.user_metadata.full_name}
+              />
+              <AvatarFallback className="rounded-lg">
+                {user?.user_metadata.full_name[0]}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-[300px]">
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-full">
+                  <AvatarImage
+                    src={user?.user_metadata.avatar_url}
+                    alt={user?.user_metadata.full_name}
+                  />
+                  <AvatarFallback className="rounded-lg">
+                    {user?.user_metadata.full_name[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="flex flex-row justify-between items-center">
+                    <span className="truncate gap-3 font-semibold">
+                      {user?.user_metadata.full_name}
+                    </span>
+                  </div>
+                  <span className="truncate text-xs">
+                    {user?.user_metadata.email}
+                  </span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link href={"/account"}>
+              <DropdownMenuItem className="cursor-pointer">
+                <User />
+                Account
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem>Placeholder 1</DropdownMenuItem>
+            <DropdownMenuItem>Placeholder 2</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <button className="w-full" onClick={handleClick}>
+              <DropdownMenuItem className="w-full cursor-pointer">
+                <LogOut />
+                Log out
+              </DropdownMenuItem>
+            </button>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

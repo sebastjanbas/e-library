@@ -17,11 +17,11 @@ import {
 import Link from "next/link";
 import { BookCategories } from "@/lib/docs";
 
-type DashboardProps = {
+export type UserType = {
   user: User | null;
 };
 
-const Dashboard = async ({ user }: DashboardProps) => {
+const Dashboard = async ({ user }: UserType) => {
   const supabase = await createClient();
   const {
     data: allBooks,

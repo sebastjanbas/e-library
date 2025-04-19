@@ -63,7 +63,7 @@ export default async function RootLayout({
         <Toaster richColors position="top-center" />
         {user ? (
           <>
-            <DashboardNavbar />
+            <DashboardNavbar user={user} />
             {children}
           </>
         ) : (
