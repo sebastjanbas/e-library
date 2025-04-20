@@ -1,3 +1,21 @@
+
+export const formatDate = (
+  dateString: string,
+  locale: string = "en-US"
+): string => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // fallback if invalid
+
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+};
+
+
 export const BookCategories = [
   "athletes",
   "historical fiction",
@@ -58,3 +76,66 @@ export const BookCategories = [
   "social sciences",
   "fiction",
 ];
+
+export const languageMap: Record<string, string> = {
+  af: "Afrikaans",
+  ar: "Arabic",
+  az: "Azerbaijani",
+  be: "Belarusian",
+  bg: "Bulgarian",
+  bn: "Bengali",
+  bs: "Bosnian",
+  ca: "Catalan",
+  cs: "Czech",
+  da: "Danish",
+  de: "German",
+  el: "Greek",
+  en: "English",
+  es: "Spanish",
+  et: "Estonian",
+  fa: "Persian",
+  fi: "Finnish",
+  fil: "Filipino",
+  fr: "French",
+  ga: "Irish",
+  gu: "Gujarati",
+  he: "Hebrew",
+  hi: "Hindi",
+  hr: "Croatian",
+  hu: "Hungarian",
+  hy: "Armenian",
+  id: "Indonesian",
+  is: "Icelandic",
+  it: "Italian",
+  ja: "Japanese",
+  jv: "Javanese",
+  ka: "Georgian",
+  kk: "Kazakh",
+  ko: "Korean",
+  lt: "Lithuanian",
+  lv: "Latvian",
+  mk: "Macedonian",
+  ml: "Malayalam",
+  mn: "Mongolian",
+  mr: "Marathi",
+  ms: "Malay",
+  nb: "Norwegian Bokmål",
+  nl: "Dutch",
+  pl: "Polish",
+  pt: "Portuguese",
+  ro: "Romanian",
+  ru: "Russian",
+  sk: "Slovak",
+  sl: "Slovene",
+  sr: "Serbian",
+  sv: "Swedish",
+  sw: "Swahili",
+  ta: "Tamil",
+  te: "Telugu",
+  th: "Thai",
+  tr: "Turkish",
+  uk: "Ukrainian",
+  ur: "Urdu",
+  vi: "Vietnamese",
+  zh: "Chinese"
+};

@@ -27,7 +27,7 @@ const AccountLayout = ({ children }: { children: React.ReactNode }) => {
           Profile
         </HighligthedTabs>
         <HighligthedTabs link="/account/membership">
-          <CreditCard className="hidden md:block" />
+          <CreditCard className=" hidden md:block" />
           Membership
         </HighligthedTabs>
         <HighligthedTabs link="/account/security">

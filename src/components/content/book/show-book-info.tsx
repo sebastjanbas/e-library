@@ -65,8 +65,8 @@ const ShowBookInfo = ({ book }: any) => {
           {book.imageLinks ? (
             <Image
               className="w-[200px] justify-self-center h-auto object-contain"
-              width={331}
-              height={500}
+              width={400}
+              height={600}
               src={book.imageLinks.thumbnail}
               alt={`${book.title} thumbnail`}
             />
@@ -74,8 +74,8 @@ const ShowBookInfo = ({ book }: any) => {
             <Image
               className="w-[200px] justify-self-center h-auto object-contain"
               src="https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
-              width={331}
-              height={500}
+              width={400}
+              height={600}
               alt="Image thumbnail"
             />
           )}
