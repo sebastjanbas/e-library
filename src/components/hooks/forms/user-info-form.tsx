@@ -28,7 +28,6 @@ const UserInfoForm = ({ user }: UserType) => {
   const form = useForm({
     resolver: zodResolver(ProfileInfoSchema),
     defaultValues: {
-      // FIX: reset the database and get read of the conditional
       firstName:
         user?.user_metadata.first_name ??
         user?.user_metadata.full_name.split(" ")[0],
@@ -40,7 +39,6 @@ const UserInfoForm = ({ user }: UserType) => {
   });
 
   const onSubmit = async (values: z.infer<typeof ProfileInfoSchema>) => {
-    console.log("DATA: ", values);
     setLoading(true);
     const response = await updateUserInfo(values);
     if (response.error) {
@@ -100,7 +98,7 @@ const UserInfoForm = ({ user }: UserType) => {
                 <Input disabled {...field} />
               </FormControl>
               <FormDescription>
-                You can not change the email at the moment
+                Email can not be changed at the moment
               </FormDescription>
               <FormMessage />
             </FormItem>

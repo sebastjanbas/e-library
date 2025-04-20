@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -7,15 +7,12 @@ import { saveBook } from "@/actions/book-actions";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-
-const ShowBookInfo = ({book}:any) => {
-
-    const highlightColor = "bg-yellow-300/30";
-    const [extended, setExtended] = useState(false);
+const ShowBookInfo = ({ book }: any) => {
+  const highlightColor = "bg-yellow-300/30";
+  const [extended, setExtended] = useState(false);
   const MAX_LENGTH = 150;
 
-
-    const submitBookInfo = async () => {
+  const submitBookInfo = async () => {
     const {
       title,
       subtitle,
@@ -32,8 +29,8 @@ const ShowBookInfo = ({book}:any) => {
     } = book;
 
     const thumbnailUrl = imageLinks?.thumbnail;
-    const isbn13 = industryIdentifiers?.[0]?.identifier;
-    const isbn10 = industryIdentifiers?.[1]?.identifier;
+    const isbn13 = industryIdentifiers?.[0]?.type == "ISBN_13" ? industryIdentifiers?.[0]?.identifier : industryIdentifiers?.[1].identifier;
+    const isbn10 = industryIdentifiers?.[0]?.type == "ISBN_10" ? industryIdentifiers?.[0]?.identifier : industryIdentifiers?.[1].identifier;
 
     const BookInfo = {
       title,
@@ -61,8 +58,6 @@ const ShowBookInfo = ({book}:any) => {
     }
   };
 
-
-
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-start mt-20 h-full w-full max-w-7xl gap-y-6 md:gap-0">
@@ -70,8 +65,8 @@ const ShowBookInfo = ({book}:any) => {
           {book.imageLinks ? (
             <Image
               className="w-[200px] justify-self-center h-auto object-contain"
-              width={128}
-              height={192}
+              width={331}
+              height={500}
               src={book.imageLinks.thumbnail}
               alt={`${book.title} thumbnail`}
             />
@@ -79,8 +74,8 @@ const ShowBookInfo = ({book}:any) => {
             <Image
               className="w-[200px] justify-self-center h-auto object-contain"
               src="https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
-              width={128}
-              height={192}
+              width={331}
+              height={500}
               alt="Image thumbnail"
             />
           )}
@@ -105,7 +100,7 @@ const ShowBookInfo = ({book}:any) => {
             <span className={highlightColor}>Published date:</span>{" "}
             {book?.publishedDate ?? "No date"}
           </p>
-          <p className="my-3 ">
+          <div className="my-3 ">
             {book.description ? (
               <>
                 <span className={highlightColor}>Description:</span>{" "}
@@ -125,7 +120,7 @@ const ShowBookInfo = ({book}:any) => {
             ) : (
               <p>No description</p>
             )}
-          </p>
+          </div>
           <p>
             <span className={highlightColor}>Page count:</span>{" "}
             {book?.pageCount === 0 || book?.pageCount == null

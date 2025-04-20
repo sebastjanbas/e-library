@@ -17,6 +17,7 @@ const BookDetailsPage = async ({ params }: { params: Promise<{ bookId: string }>
   }
   
   return (
+    // FIX: add the book edit functionality
     <div className="mt-24 p-5">
       {data && (
         <>
@@ -29,8 +30,8 @@ const BookDetailsPage = async ({ params }: { params: Promise<{ bookId: string }>
                   target="_blank"
                 >
                   <Image
-                    width={128}
-                    height={192}
+                    width={331}
+                    height={500}
                     src={
                       data[0].cover_url ??
                       "https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"

@@ -10,7 +10,7 @@ const AccountProfilePage = async () => {
   } = await supabase.auth.getUser();
 
   return (
-    <div className="w-full max-w-4xl px-10 pb-10">
+    <div className="w-full md:max-w-4xl pb-10">
       <div className="py-8">
         <h1 className="text-4xl font-bold">Edit Profile</h1>
         <p>Make changes to your personal information</p>

@@ -5,7 +5,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const AccountOverviewPage = () => {
   return (
-    <div className="w-full max-w-4xl px-10 pb-10">
+    <div className="w-full md:max-w-4xl pb-10">
       <div className="py-8">
         <h1 className="text-4xl font-bold">Account</h1>
         <p>Account Details</p>

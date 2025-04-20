@@ -27,7 +27,11 @@ const Dashboard = async ({ user }: UserType) => {
     data: allBooks,
     count,
     error,
-  } = await supabase.from("books").select("id, title, description, categories, cover_url", { count: "exact" });
+  } = await supabase
+    .from("books")
+    .select("id, title, description, categories, cover_url", {
+      count: "exact",
+    });
 
   if (error) {
     toast.error("Error loading books!");
@@ -69,7 +73,6 @@ const Dashboard = async ({ user }: UserType) => {
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-row justify-center items-center gap-5 w-full max-w-lg justify-self-center">
-              {/* FIX: add the manual input */}
               <Button className="flex-1 cursor-pointer rounded-full" asChild>
                 <Link href={"/add-book"}>Enter Details Manually</Link>
               </Button>
@@ -94,17 +97,22 @@ const Dashboard = async ({ user }: UserType) => {
             </div>
             {BookCategories.filter((category) =>
               allBooks?.some((book) =>
-                book.categories?.some((cat:string) => cat.toLowerCase() === category),
+                book.categories?.some((cat: string) =>
+                  cat.toLowerCase().includes(category.toLowerCase()),
+                ),
               ),
             ).map((category, i) => (
               <div key={i}>
                 <p className="capitalize">{category}</p>
                 <BookList
-                  list={allBooks && allBooks?.filter((book) =>
-                    book.categories?.some(
-                      (cat:string) => cat.toLowerCase() === category,
-                    ),
-                  )}
+                  list={
+                    allBooks &&
+                    allBooks.filter((book) =>
+                      book.categories?.some((cat: string) =>
+                        new RegExp(`\\b${category}\\b`, "i").test(cat),
+                      ),
+                    )
+                  }
                 />
               </div>
             ))}

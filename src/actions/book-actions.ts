@@ -28,6 +28,10 @@ export const saveBook = async (values: z.infer<typeof BookSchema>) => {
     return { error: "A book with the same ISBN already exists." };
   }
 
+  if (values.thumbnailUrl){
+    values.thumbnailUrl = `https://images-na.ssl-images-amazon.com/images/P/${values.isbn10}.01._SX360_SCLZZZZZZZ_.jpg`
+  }
+
   const bookInfo = {
     user_id: user?.id,
     title: values.title,

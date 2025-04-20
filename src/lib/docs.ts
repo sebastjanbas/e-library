@@ -1,4 +1,5 @@
 export const BookCategories = [
+  "athletes",
   "historical fiction",
   "science fiction",
   "fantasy",

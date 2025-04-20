@@ -49,8 +49,8 @@ export const BookHoverPopover = ({
                 book.cover_url ??
                 `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(book.title)}&font=playfair-display&fontsize=24`
               }
-              width={128}
-              height={192}
+              width={331}
+              height={500}
               alt={book.title}
               className="h-48 w-32 md:h-[288px] md:w-[192px] object-cover rounded-md"
             />
@@ -70,8 +70,8 @@ export const BookHoverPopover = ({
             book.cover_url ??
             `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(book.title)}&font=playfair-display&fontsize=24`
           }
-          width={128}
-          height={192}
+          width={331}
+          height={500}
           alt={book.title}
           className="w-32 h-48 object-cover rounded-md"
         />

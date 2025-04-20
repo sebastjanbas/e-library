@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserType } from "./dashboard";
-import { LogOut, User } from "lucide-react";
+import { Archive, CircleHelp, LogOut, User, Users } from "lucide-react";
 import { logout } from "@/actions/login";
 
 const DashboardNavbar = ({ user }: UserType) => {
@@ -79,8 +79,9 @@ const DashboardNavbar = ({ user }: UserType) => {
                 Account
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>Placeholder 1</DropdownMenuItem>
-            <DropdownMenuItem>Placeholder 2</DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic"><Users /> Friends (comming soon)</DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic"><Archive /> Archive (comming soon)</DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic"><CircleHelp /> Help (comming soon)</DropdownMenuItem>
             <DropdownMenuSeparator />
             <button className="w-full" onClick={handleClick}>
               <DropdownMenuItem className="w-full cursor-pointer">
