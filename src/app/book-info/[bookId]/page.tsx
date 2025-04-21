@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { Building, CalendarDays, InfoIcon, Ruler } from "lucide-react";
-import { HiOutlineCog } from "react-icons/hi";
 import { IoIosGlobe } from "react-icons/io";
 import Image from "next/image";
 import React from "react";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { BsStarFill } from "react-icons/bs";
 import { formatDate, languageMap } from "@/lib/docs";
+import EditBookButton from "@/components/avatar/buttons/edit-book-button";
 
 const BookDetailsPage = async ({
   params,
@@ -69,7 +69,7 @@ const BookDetailsPage = async ({
 
               <div className="relative rounded-2xl px-4 py-3 bg-[#848A95] w-full md:w-fit">
                 <div className="absolute top-3 right-4 cursor-pointer">
-                  <HiOutlineCog size={24} strokeWidth={1.5} className="text-white" />
+                  <EditBookButton book={data[0]} />
                 </div>
                   <Dialog>
                     <h1 className="inline-flex text-white items-center gap-3 text-lg md:text-xl font-semibold">

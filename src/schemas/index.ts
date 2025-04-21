@@ -37,7 +37,8 @@ export const BookSchema = z.object({
   infoUrl: z.string().url(),
 });
 
-export type SupabaseBookSchema = {
+export type BookType = {
+  id: string,
   user_id: string;
   title: string;
   subtitle: string;
@@ -45,8 +46,8 @@ export type SupabaseBookSchema = {
   publisher: string;
   description: string;
   published_date: string;
-  isbn_10: number;
-  isbn_13: number;
+  isbn_10: string;
+  isbn_13: string;
   page_count: number;
   cover_url?: string;
   categories: string[];

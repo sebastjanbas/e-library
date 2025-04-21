@@ -28,8 +28,8 @@ export const saveBook = async (values: z.infer<typeof BookSchema>) => {
     return { error: "A book with the same ISBN already exists." };
   }
 
-  if (values.thumbnailUrl){
-    values.thumbnailUrl = `https://images-na.ssl-images-amazon.com/images/P/${values.isbn10}.01._SX360_SCLZZZZZZZ_.jpg`
+  if (values.thumbnailUrl) {
+    values.thumbnailUrl = `https://images-na.ssl-images-amazon.com/images/P/${values.isbn10}.01._SX360_SCLZZZZZZZ_.jpg`;
   }
 
   const bookInfo = {
@@ -57,4 +57,48 @@ export const saveBook = async (values: z.infer<typeof BookSchema>) => {
   }
 
   return { success: "Successfully saved!" };
+};
+
+export const updateBookInfo = async (
+  values: z.infer<typeof BookSchema>,
+  id: string,
+) => {
+  const supabase = await createClient();
+
+  const updatedData = {
+    title: values.title ?? "",
+    subtitle: values.subtitle ?? "",
+    authors: values.authors ?? [""],
+    publisher: values.publisher ?? "",
+    published_date: values.publishedDate ?? null,
+    isbn_10: values.isbn10 ?? "",
+    isbn_13: values.isbn13 ?? "",
+    page_count: values.pageCount ?? 0,
+    cover_url: values.thumbnailUrl ?? null,
+    description: values.description ?? null,
+    categories: values.categories ?? null,
+    language: values.language ?? null,
+    info_link: values.infoUrl ?? null,
+  };
+
+  const { error } = await supabase
+    .from("books")
+    .update(updatedData)
+    .eq("id", id);
+
+  if (error) {
+    return { error: "Something went wrong: " + error.message };
+  }
+  return { success: "Book updated successfully!" };
+};
+
+export const removeBook = async (id: string) => {
+  const supabase = await createClient();
+  const response = await supabase.from("books").delete().eq("id", id);
+
+  if (response.status !== 204) {
+    return { error: "Something went wrong: " + response.statusText };
+  } else {
+    return { success: "Book successfully deleted!" };
+  }
 };

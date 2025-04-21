@@ -5,8 +5,12 @@ export const formatDate = (
 ): string => {
   if (!dateString) return "";
 
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return dateString; // fallback if invalid
+  // Use regex or string split to extract parts
+  const [year, month, day] = dateString.split("-").map(Number);
+  if (!year || !month || !day) return dateString;
+
+  // JS months are 0-indexed
+  const date = new Date(year, month - 1, day);
 
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
