@@ -34,7 +34,7 @@ export const BookHoverPopover = ({
     if (isTouchDevice) return;
     timeoutRef.current = setTimeout(() => {
       setOpen(true);
-    }, 500); // slight delay
+    }, 1000); // slight delay
   };
 
   const handleMouseLeave = () => {

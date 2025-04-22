@@ -11,11 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserType } from "./dashboard";
-import { Archive, CircleHelp, LogOut, User, Users } from "lucide-react";
+import { Archive, CircleHelp, LogOut, User as UserLogo, Users } from "lucide-react";
 import { logout } from "@/actions/login";
+import { useUser } from "@/store/useUser";
 
-const DashboardNavbar = ({ user }: UserType) => {
+const DashboardNavbar = () => {
+
+  const {user} = useUser();
+
   const handleClick = async () => {
     const response = await logout();
     if (response.success) {
@@ -75,13 +78,19 @@ const DashboardNavbar = ({ user }: UserType) => {
             <DropdownMenuSeparator />
             <Link href={"/account"}>
               <DropdownMenuItem className="cursor-pointer">
-                <User />
+                <UserLogo />
                 Account
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem disabled className="italic"><Users /> Friends (comming soon)</DropdownMenuItem>
-            <DropdownMenuItem disabled className="italic"><Archive /> Archive (comming soon)</DropdownMenuItem>
-            <DropdownMenuItem disabled className="italic"><CircleHelp /> Help (comming soon)</DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic">
+              <Users /> Friends (comming soon)
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic">
+              <Archive /> Archive (comming soon)
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled className="italic">
+              <CircleHelp /> Help (comming soon)
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <button className="w-full" onClick={handleClick}>
               <DropdownMenuItem className="w-full cursor-pointer">

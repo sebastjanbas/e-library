@@ -39,7 +39,7 @@ export const BookSchema = z.object({
 
 export type BookType = {
   id: string,
-  user_id: string;
+  user_id?: string;
   title: string;
   subtitle: string;
   authors: string[];
@@ -52,7 +52,7 @@ export type BookType = {
   cover_url?: string;
   categories: string[];
   language: string;
-  info_link: string;
+  info_link?: string;
 };
 
 export const ProfileInfoSchema = z.object({

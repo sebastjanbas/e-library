@@ -15,6 +15,7 @@ import Navbar from "@/components/content/navbar";
 import LandingPage from "@/components/content/landing-page";
 import { redirect } from "next/navigation";
 import DashboardNavbar from "@/components/content/protected/dashboard-navbar";
+import { AppProvider } from "@/components/providers/user-provider";
 
 export const metadata: Metadata = {
   title: "E-Library",
@@ -31,11 +32,10 @@ const pacifico = Pacifico({
   weight: ["400"],
 });
 
-
 const orbitron = Orbitron({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"]
-})
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 const pinyon = Pinyon_Script({
   subsets: ["latin"],
@@ -47,34 +47,16 @@ const plexMono = IBM_Plex_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700"],
 });
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   return (
     <html lang="en">
       <body className="font-seba tracking-tighter ">
         <Toaster richColors position="top-center" />
-        {user ? (
-          <>
-            <DashboardNavbar user={user} />
-            {children}
-          </>
-        ) : (
-          <>
-            <Navbar />
-            <LandingPage />
-            <p className="text-5xl w-full text-center mb-60 font-semibold">
-              FOOTER
-            </p>
-          </>
-        )}
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
