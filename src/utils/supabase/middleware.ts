@@ -38,10 +38,10 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-   const isPublic = request.nextUrl.pathname === "/";
+   const isPublic = request.nextUrl.pathname === "/home";
 
   if (!isPublic && !user) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   return NextResponse.next();

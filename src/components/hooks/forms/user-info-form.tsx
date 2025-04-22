@@ -1,5 +1,4 @@
 "use client";
-import { UserType } from "@/components/content/protected/dashboard";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,10 +19,12 @@ import { Input } from "@/components/ui/input";
 import { ProfileInfoSchema } from "@/schemas";
 import { updateUserInfo } from "@/actions/update-user";
 import { toast } from "sonner";
+import { useUser } from "@/store/useUser";
 
-const UserInfoForm = ({ user }: UserType) => {
+const UserInfoForm = () => {
+  const { user } = useUser();
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(ProfileInfoSchema),
@@ -105,7 +106,14 @@ const UserInfoForm = ({ user }: UserType) => {
           )}
         />
         <Button disabled={loading} type="submit">
-          {!loading ? (<span>Update</span>): (<><LoaderCircle className="animate-spin" /><span>Saving Changes ...</span></>)}
+          {!loading ? (
+            <span>Update</span>
+          ) : (
+            <>
+              <LoaderCircle className="animate-spin" />
+              <span>Saving Changes ...</span>
+            </>
+          )}
         </Button>
       </form>
     </Form>

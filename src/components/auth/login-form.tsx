@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { LoginScema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
+import { redirect } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,6 +39,7 @@ const LoginForm = () => {
       toast.success(response.success);
     }
     setIsSubmitting(false);
+    redirect("/")
   };
   return (
     <div className="w-full">

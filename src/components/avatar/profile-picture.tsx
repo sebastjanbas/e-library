@@ -2,6 +2,7 @@
 import React from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UploadCareInput from "@/components/ui/uploadcare";
+import { useUser } from "@/store/useUser";
 
 export function extractId(url:string) {
   const pathname = new URL(url).pathname;
@@ -9,21 +10,21 @@ export function extractId(url:string) {
 }
 
 
-const ProfilePicture = ({userImage, fallback}: {userImage: string, fallback: string}) => {
-
+const ProfilePicture = () => {
+  const {user} = useUser();
 
   return (
     <>
       <Avatar className="h-20 w-20 rounded-full">
         <AvatarImage
-          src={userImage}
+          src={user?.user_metadata.avatar_url}
           alt={"Profile photo"}
         />
         <AvatarFallback className="rounded-lg text-2xl">
-          {fallback}
+          {user?.user_metadata.full_name[0]}
         </AvatarFallback>
       </Avatar>
-      <UploadCareInput userImage={userImage} />
+      <UploadCareInput userImage={user?.user_metadata.avatar_url} />
     </>
   );
 };

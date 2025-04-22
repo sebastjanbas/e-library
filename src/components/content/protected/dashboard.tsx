@@ -1,11 +1,6 @@
 import { User } from "@supabase/supabase-js";
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-// import { Camera } from "lucide-react";
-import { Stats } from "./user/dashboard/stats";
-import { BookList } from "./user/dashboard/book-list";
-import { createClient } from "@/utils/supabase/server";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -15,50 +10,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-import { BookCategories } from "@/lib/docs";
+import BookDashboardList from "../book/book-dashboard-list";
+import BookListSkeleton from "../skeletons/book-list-skeleton";
 
 export type UserType = {
   user: User | null;
 };
 
-const Dashboard = async ({ user }: UserType) => {
-  const supabase = await createClient();
-  const {
-    data: allBooks,
-    count,
-    error,
-  } = await supabase
-    .from("books")
-    .select("id, title, description, categories, cover_url", {
-      count: "exact",
-    });
-
-  if (error) {
-    toast.error("Error loading books!");
-  }
-
-  // const SampleBooks = Array.from({ length: 20 }, (_, i) => ({
-  //   title: [
-  //     "Great Gatsby",
-  //     "Faster Than Lightning",
-  //     "Grokking Algorithms",
-  //     "Topolino",
-  //     "Designing Data-Intensive Applications The Big Ideas Behind Reliable, Scalable, And Maintainable Systems",
-  //   ][i % 5],
-  //   description: "This is a placeholder description for the book.",
-  //   categories: ["Category A", "Category B"],
-  // }));
-
+const Dashboard = async () => {
   return (
-    <div className="w-screen h-screen flex flex-col justify-start items-center p-5 xl:p-10">
-      <div className="mt-20 flex flex-row justify-start items-center w-full gap-10">
-        <p>
-          Welcome{" "}
-          <span className="font-semibold italic">
-            {user?.user_metadata.first_name ?? "ERROR"}
-          </span>
-        </p>
-      </div>
+    <div className="w-screen h-screen mt-20 flex flex-col justify-start items-center p-5 xl:p-10">
       <div className="flex flex-col gap-5 justify-center items-center my-10">
         <p>Scan a book to add it to the library</p>
         <Dialog>
@@ -84,42 +45,9 @@ const Dashboard = async ({ user }: UserType) => {
         </Dialog>
       </div>
       <div className="flex flex-col gap-10 w-full">
-        <Stats stats={count ?? 500} author="Agatha Cristie" />
-        {count !== 0 ? (
-          <>
-            {/* <div> */}
-            {/*   <p>test</p> */}
-            {/*   <BookList list={SampleBooks} /> */}
-            {/* </div> */}
-            <div>
-              <p>ALL</p>
-              <BookList list={allBooks} />
-            </div>
-            {BookCategories.filter((category) =>
-              allBooks?.some((book) =>
-                book.categories?.some((cat: string) =>
-                  cat.toLowerCase().includes(category.toLowerCase()),
-                ),
-              ),
-            ).map((category, i) => (
-              <div key={i}>
-                <p className="capitalize">{category}</p>
-                <BookList
-                  list={
-                    allBooks &&
-                    allBooks.filter((book) =>
-                      book.categories?.some((cat: string) =>
-                        new RegExp(`\\b${category}\\b`, "i").test(cat),
-                      ),
-                    )
-                  }
-                />
-              </div>
-            ))}
-          </>
-        ) : (
-          <p>Add your first book to see statistics</p>
-        )}
+        <Suspense fallback={<BookListSkeleton />} >
+          <BookDashboardList />
+        </Suspense>
       </div>
     </div>
   );
