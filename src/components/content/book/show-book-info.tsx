@@ -1,16 +1,60 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { saveBook } from "@/actions/book-actions";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
+import { createClient } from "@/utils/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type LibraryType = {
+  id: string,
+  name: string,
+  user_id: string,
+  description: string,
+  created_at: string,
+}
+
 
 const ShowBookInfo = ({ book }: any) => {
   const highlightColor = "bg-yellow-300/30";
   const [extended, setExtended] = useState(false);
+  const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
+  const [enableSelect, setEnableSelect] = useState(false);
   const MAX_LENGTH = 150;
+
+  useEffect(() => {
+    const fetchLibraries = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.from("libraries").select("*");
+
+      if (error) {
+        toast.error("Something went wrong: " + error.message);
+        return;
+      }
+
+      setLibraries(data);
+      if (data.length !== 0) {
+        setEnableSelect(true);
+      }
+    };
+
+    fetchLibraries();
+  }, []);
+
+  const addLibrary = () => {
+    // FIX: implement the addLibrary function
+
+  }
+
 
   const submitBookInfo = async () => {
     const {
@@ -29,8 +73,14 @@ const ShowBookInfo = ({ book }: any) => {
     } = book;
 
     const thumbnailUrl = imageLinks?.thumbnail;
-    const isbn13 = industryIdentifiers?.[0]?.type == "ISBN_13" ? industryIdentifiers?.[0]?.identifier : industryIdentifiers?.[1].identifier;
-    const isbn10 = industryIdentifiers?.[0]?.type == "ISBN_10" ? industryIdentifiers?.[0]?.identifier : industryIdentifiers?.[1].identifier;
+    const isbn13 =
+      industryIdentifiers?.[0]?.type == "ISBN_13"
+        ? industryIdentifiers?.[0]?.identifier
+        : industryIdentifiers?.[1].identifier;
+    const isbn10 =
+      industryIdentifiers?.[0]?.type == "ISBN_10"
+        ? industryIdentifiers?.[0]?.identifier
+        : industryIdentifiers?.[1].identifier;
 
     const BookInfo = {
       title,
@@ -59,7 +109,8 @@ const ShowBookInfo = ({ book }: any) => {
   };
 
   return (
-    <>
+    // FIX: fix the UI and spread the component to different components if needed.
+    <div className="flex flex-col">
       <div className="flex flex-col md:flex-row justify-center items-start mt-20 h-full w-full max-w-7xl gap-y-6 md:gap-0">
         <div className="flex-1 justify-center items-center">
           {book.imageLinks ? (
@@ -149,6 +200,34 @@ const ShowBookInfo = ({ book }: any) => {
               google books link
             </a>
           </p>
+          <div className="w-full mt-10">
+            <div className="flex gap-3">
+              <Select>
+                <SelectTrigger
+                  disabled={!enableSelect}
+                  className="w-[180px] disabled:cursor-default"
+                >
+                  <SelectValue placeholder="Libraries" />
+                </SelectTrigger>
+                <SelectContent>
+                  {libraries &&
+                    libraries.map((lib, i: number) => (
+                      <SelectItem key={i} value={lib?.id}>
+                        {lib?.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+              <Button className="bg-background text-foreground text-lg font-light shadow-lg border-[1px] border-foreground/10 hover:bg-background hover:scale-105" onClick={addLibrary}>
+                +
+              </Button>
+            </div>
+            {!enableSelect && (
+              <p className="text-sm italic text-foreground/50">
+                You dont have any libraries yet
+              </p>
+            )}
+          </div>
           <Button className="mt-5 md:hover:scale-105" onClick={submitBookInfo}>
             {/* FIX: Add the selection option (or create new) */}
             Add Book to Library
@@ -158,7 +237,7 @@ const ShowBookInfo = ({ book }: any) => {
       {/* <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}> */}
       {/*   {JSON.stringify(book, null, 2)} */}
       {/* </pre> */}
-    </>
+    </div>
   );
 };
 
