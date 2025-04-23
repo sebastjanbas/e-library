@@ -1,164 +1,110 @@
-"use client"
-import EditBookButton from '@/components/avatar/buttons/edit-book-button'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { formatDate, languageMap } from '@/lib/docs'
-import { BookType } from '@/schemas'
-import { Building, CalendarDays, InfoIcon, Ruler } from 'lucide-react'
-import Image from 'next/image'
-import React from 'react'
-import { BsStarFill } from 'react-icons/bs'
-import { IoIosGlobe } from 'react-icons/io'
+"use client";
+import EditBookButton from "@/components/avatar/buttons/edit-book-button";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { BookType } from "@/schemas";
+import { InfoIcon } from "lucide-react";
+import React from "react";
+import Book from "./book-details";
 
-const BookDetailsClient = ({book}:{book:BookType}) => {
+const BookDetailsClient = ({ book }: { book: BookType }) => {
   return (
-        <div className="w-full max-w-6xl">
-          <div className="flex flex-col md:flex-row gap-10 items-stretch">
-            <div className="md:basis-1/3 flex justify-center items-start">
-              <div className="h-full w-fit">
-                <Image
-                  width={400}
-                  height={600}
-                  src={
-                    book.cover_url ??
-                    "https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
-                  }
-                  alt={book.title}
-                  className="w-auto h-96 object-contain rounded-2xl"
-                />
-              </div>
-            </div>
-            <div className="md:basis-2/3 h-fit md:h-screen max-h-96 flex flex-col justify-between items-start">
-              <div className="w-full">
-                <p className="w-full text-center md:text-start text-2xl md:text-3xl font-semibold pb-1">{book.title}</p>
-                <p className="w-full text-center md:text-start text-lg md:text-xl font-semibold pb-2">
-                  {book.subtitle ?? "Unknown"}
-                </p>
-                <p className="pb-5 w-full text-center md:text-start">
-                  {book.authors?.join(", ") ?? "Unknown"}
-                </p>
-                <p className="text-sm pb-10 italic w-full text-center md:text-start">
-                  {book.categories?.join(", ") ?? "Unknown"}
-                </p>
-              </div>
-
-              <div className="relative rounded-2xl px-4 py-3 bg-[#848A95] w-full md:w-fit">
-                <div className="absolute top-3 right-4 cursor-pointer">
-                  <EditBookButton book={book} />
-                </div>
-                  <Dialog>
-                    <h1 className="inline-flex text-white items-center gap-3 text-lg md:text-xl font-semibold">
-                      Book
-                      <DialogTrigger className="cursor-pointer">
-                        <InfoIcon className="size-[18px] md:size-[20px]" />
-                      </DialogTrigger>
-                    </h1>
-                    <DialogContent className="max-w-xl">
-                      <DialogHeader className="flex flex-row w-full items-start justify-start h-14">
-                        <Image
-                          width={400}
-                          height={600}
-                          src={
-                            book.cover_url ??
-                            "https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
-                          }
-                          alt={book.title}
-                          className="w-auto h-full object-contain rounded-xs"
-                        />
-
-                        <div className="flex flex-col">
-                          <DialogTitle className="text-[1.3rem]">
-                            Edition Details
-                          </DialogTitle>
-                          <p className="leading-3">Book</p>
-                        </div>
-                      </DialogHeader>
-                      <div className="w-full h-[1px] bg-foreground/10"></div>
-                      <div className="text-sm">
-                        <h1 className="text-md font-semibold">
-                          Publisher Description
-                        </h1>
-                        <p>{book.description?.slice(0, 150) ?? "Unknown"}</p>
-                        <div className="my-5 w-full h-[1px] bg-foreground/10"></div>
-                      </div>
-                      <div className="flex flex-col justify-center items-start gap-5">
-                        <div className="flex flex-row items-center gap-3">
-                          <span className="text-lg font-semibold tracking-tighter w-8">4.7</span>
-                          <div className="flex flex-col gap-0">
-                            <h2 className="text-sm text-gray-600">Book Rating</h2>
-                            <span className="inline-flex gap-1">
-                            <BsStarFill />
-                            <BsStarFill />
-                            <BsStarFill />
-                            <BsStarFill />
-                            <BsStarFill />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-row gap-3 items-center">
-                          <CalendarDays className="w-8" />
-                          <div className="flex flex-col gap-0">
-                            <h2 className="text-sm text-gray-600">Released</h2>
-                            <p className="font-semibold leading-4">{formatDate(book.published_date)}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-row gap-3 items-center">
-                          <IoIosGlobe size={27} className="w-8" />
-                          <div className="flex flex-col gap-0">
-                            <h2 className="text-sm text-gray-600">Language</h2>
-                            <p className="font-semibold leading-4">{languageMap[book.language] ?? book.language }</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-row gap-3 items-center">
-                          <Ruler className="rotate-[-45deg] w-8" />
-                          <div className="flex flex-col gap-0">
-                            <h2 className="text-sm text-gray-600">Length</h2>
-                            <p className="font-semibold leading-4">{book.page_count ?? 0}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-row gap-3 items-center">
-                          <Building className="w-8" />
-                          <div className="flex flex-col gap-0">
-                            <h2 className="text-sm text-gray-600">Publisher</h2>
-                            <p className="font-semibold leading-4">{book.publisher ?? "Unknown"}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                <p className="text-sm pb-4 text-white">
-                  {book.page_count ?? 0} Pages
-                </p>
-
-                <div className="flex flex-row gap-3">
-                  <Button
-                    size={"lg"}
-                    className="flex-1/2 bg-[#9DA2AE] hover:bg-[#8C919B] hover:text-[#C4C8D1] text-md font-semibold transition-colors duration-300 ease-in-out cursor-pointer rounded-lg"
-                  >
-                    Start Reading
-                  </Button>
-                  <Button
-                    size={"lg"}
-                    asChild
-                    className="flex-1/2 bg-white hover:bg-[#B3B5BC] hover:text-[#73757B] text-foreground text-md font-normal transition-colors duration-300 ease-in-out cursor-pointer rounded-lg"
-                  >
-                    <a
-                      href={`https://www.google.com/search?q=${book.title.replaceAll(" ", "+")}&oq=${book.title.replaceAll(" ", "+")}`}
-                      target="_blank"
-                    >
-                      Find Online
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="pt-20 w-full max-w-5xl justify-self-center pb-20">
-            <h1 className="text-xl font-semibold pb-2">About the book:</h1>
-            <p className="italic leading-relaxed tracking-normal text-justify">{book.description ?? "Not Specified"}</p>
+    <Book bookInfo={book}>
+      <div className="flex flex-col md:flex-row gap-10 items-stretch">
+        <div className="md:basis-1/3 flex justify-center items-start">
+          <div className="h-full w-fit">
+            <Book.Image className="w-auto h-96 object-contain rounded-2xl" />
           </div>
         </div>
-  )
-}
 
-export default BookDetailsClient
+        <div className="md:basis-2/3 h-fit md:h-screen max-h-96 flex flex-col justify-between items-start">
+          <div className="w-full">
+            <Book.Title />
+            <Book.Subtitle />
+            <Book.Authors />
+            <Book.Categories />
+          </div>
+
+          <div className="relative rounded-2xl px-4 py-3 bg-[#848A95] w-full md:w-fit">
+            <div className="absolute top-3 right-4 cursor-pointer">
+              <EditBookButton book={book} />
+            </div>
+            <Dialog>
+              <h1 className="inline-flex text-white items-center gap-3 text-lg md:text-xl font-semibold">
+                Book
+                <DialogTrigger className="cursor-pointer">
+                  <InfoIcon className="size-[18px] md:size-[20px]" />
+                </DialogTrigger>
+              </h1>
+              <DialogContent className="max-w-xl">
+                <DialogHeader className="flex flex-row w-full items-start justify-start h-14">
+                  <Book.Image className="w-auto h-full object-contain rounded-xs"
+ />
+                  <div className="flex flex-col">
+                    <DialogTitle className="text-[1.3rem]">
+                      Edition Details
+                    </DialogTitle>
+                    <p className="leading-3">Book</p>
+                  </div>
+                </DialogHeader>
+                <div className="w-full h-[1px] bg-foreground/10"></div>
+                <div className="text-sm">
+                  <h1 className="text-md font-semibold">
+                    Publisher Description
+                  </h1>
+                  <p>{book.description?.slice(0, 150) ?? "No description"}</p>
+                  <div className="my-5 w-full h-[1px] bg-foreground/10"></div>
+                </div>
+                <div className="flex flex-col justify-center items-start gap-5">
+                  <Book.Rating rating="4.7" />
+                  <Book.Released />
+                  <Book.Language />
+                  <Book.Length />
+                  <Book.Publisher />
+                </div>
+              </DialogContent>
+            </Dialog>
+            <p className="text-sm pb-4 text-white">
+              {book.page_count ?? 0} Pages
+            </p>
+
+            <div className="flex flex-row gap-3">
+              <Button
+                size={"lg"}
+                className="flex-1/2 bg-[#9DA2AE] hover:bg-[#8C919B] hover:text-[#C4C8D1] text-md font-semibold transition-colors duration-300 ease-in-out cursor-pointer rounded-lg"
+              >
+                Start Reading
+              </Button>
+              <Button
+                size={"lg"}
+                asChild
+                className="flex-1/2 bg-white hover:bg-[#B3B5BC] hover:text-[#73757B] text-foreground text-md font-normal transition-colors duration-300 ease-in-out cursor-pointer rounded-lg"
+              >
+                <a
+                  href={`https://www.google.com/search?q=${book.title.replaceAll(" ", "+")}&oq=${book.title.replaceAll(" ", "+")}`}
+                  target="_blank"
+                >
+                  Find Online
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="pt-20 w-full max-w-5xl justify-self-center pb-20">
+        <h1 className="text-xl font-semibold pb-2">About the book:</h1>
+        <p className="italic leading-relaxed tracking-normal text-justify">
+          {book.description ?? "Not Specified"}
+        </p>
+      </div>
+    </Book>
+  );
+};
+
+export default BookDetailsClient;

@@ -42,11 +42,7 @@ const ISBNForm = () => {
   };
 
   if (book) {
-    return (
-      <>
-        <ShowBookInfo book={book} />
-      </>
-    );
+    return <ShowBookInfo book={book} />;
   }
 
   return (
