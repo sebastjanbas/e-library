@@ -14,6 +14,7 @@ import React from "react";
 import Book from "./book-details";
 
 const BookDetailsClient = ({ book }: { book: BookType }) => {
+  // FIX: add the library tag in the book info (and an option to change, and add the library)
   return (
     <Book bookInfo={book}>
       <div className="flex flex-col md:flex-row gap-10 items-stretch">

@@ -3,7 +3,10 @@ import { z } from "zod";
 import { BookSchema, LibraryType } from "@/schemas";
 import { createClient } from "@/utils/supabase/server";
 
-export const saveBook = async (values: z.infer<typeof BookSchema>) => {
+export const saveBook = async (
+  values: z.infer<typeof BookSchema>,
+  library: string,
+) => {
   const supabase = await createClient();
 
   const {
@@ -11,21 +14,38 @@ export const saveBook = async (values: z.infer<typeof BookSchema>) => {
     error: userError,
   } = await supabase.auth.getUser();
 
-  // 1. Check for existing book with same ISBN
-  const { data: existingBooks, error: selectError } = await supabase
+  if (userError || !user) {
+    return { error: "User not authenticated!" };
+  }
+
+  // 1. Find all books with same ISBN and same user
+  const { data: existingBooks, error: bookLookupError } = await supabase
     .from("books")
     .select("id")
     .or(`isbn_13.eq.${values.isbn13},isbn_10.eq.${values.isbn10}`)
-    .eq("user_id", user?.id) // optional: only check duplicates for the same user
-    .limit(1);
+    .eq("user_id", user?.id);
 
-  if (selectError) {
-    console.error(selectError);
+  if (bookLookupError) {
     return { error: "Error checking for existing book." };
   }
 
+  // 2. If any book exists, check if any of them are already linked to the given library
   if (existingBooks && existingBooks.length > 0) {
-    return { error: "A book with the same ISBN already exists." };
+    const existingBookIds = existingBooks.map((book) => book.id);
+
+    const { data: existingLinks, error: linkError } = await supabase
+      .from("library_books")
+      .select("id")
+      .in("book_id", existingBookIds)
+      .eq("library_id", library);
+
+    if (linkError) {
+      return { error: "Error checking if book already exists in library." };
+    }
+
+    if (existingLinks && existingLinks.length > 0) {
+      return { error: "This book already exists in the selected library." };
+    }
   }
 
   if (values.thumbnailUrl) {
@@ -49,11 +69,24 @@ export const saveBook = async (values: z.infer<typeof BookSchema>) => {
     info_link: values.infoUrl,
   };
 
-  const { error } = await supabase.from("books").insert(bookInfo);
+  const { data: bookData, error: insertError } = await supabase
+    .from("books")
+    .insert(bookInfo)
+    .select("id")
+    .single();
 
-  if (error || userError) {
-    console.log(error);
-    return { error: "Something went wrong!" };
+  if (insertError || !bookData) {
+    return { error: "Failed to save book." };
+  }
+
+  const { error: libraryError } = await supabase.from("library_books").insert({
+    library_id: library,
+    book_id: bookData.id,
+    reading_status: "not_started",
+  });
+
+  if (libraryError) {
+    return { error: "Something went wrong!" + libraryError.message };
   }
 
   return { success: "Successfully saved!" };
@@ -103,19 +136,21 @@ export const removeBook = async (id: string) => {
   }
 };
 
-export const createLibrary = async (values : z.infer<typeof LibraryType>) => {
-  const supabase = await createClient()
-  const {data : {user}} = await supabase.auth.getUser()
+export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const libraryData = {
     user_id: user?.id,
     name: values.name,
     description: values.description,
-  }
-  const {error} = await supabase.from("libraries").insert(libraryData)
+  };
+  const { error } = await supabase.from("libraries").insert(libraryData);
 
-  if (error){
-    return {error: "Error creating a library: " + error.message}
+  if (error) {
+    return { error: "Error creating a library: " + error.message };
   }
-  return {success: "Library created successfully!"}
-}
+  return { success: "Library created successfully!" };
+};

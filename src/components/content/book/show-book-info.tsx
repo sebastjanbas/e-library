@@ -34,6 +34,7 @@ type LibraryType = {
 };
 
 const ShowBookInfo = ({ book }: any) => {
+  const [library, setLibrary] = useState<string>("")
   const [open, setOpen] = useState(false);
   const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
   const [enableSelect, setEnableSelect] = useState(false);
@@ -59,6 +60,12 @@ const ShowBookInfo = ({ book }: any) => {
   }, [count]);
 
   const submitBookInfo = async () => {
+
+    if (library === ""){
+      toast.error("Must specify the library the book belongs to")
+      return
+    }
+
     const {
       title,
       subtitle,
@@ -100,10 +107,7 @@ const ShowBookInfo = ({ book }: any) => {
       isbn10,
     };
 
-    // FIX: Get value of the selected library.
-
-    // FIX: Insert book and library to joined table.
-    const response = await saveBook(BookInfo);
+    const response = await saveBook(BookInfo, library);
 
     if (response.error) {
       toast.error(response.error);
@@ -137,7 +141,7 @@ const ShowBookInfo = ({ book }: any) => {
             <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center gap-3 md:gap-10">
               <div>
                 <div className="flex gap-3">
-                  <Select>
+                  <Select value={library} onValueChange={(val) => setLibrary(val)}>
                     <SelectTrigger
                       disabled={!enableSelect}
                       className="w-[180px] disabled:cursor-default"
