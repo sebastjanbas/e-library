@@ -60,3 +60,10 @@ export const ProfileInfoSchema = z.object({
   lastName: z.string(),
   email: z.string(),
 });
+
+
+export const LibraryType = z.object({
+    name: z.string(),
+    description: z.string(),
+  });
+

@@ -7,6 +7,15 @@ import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -14,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Book from "./book-details";
+import LibraryForm from "@/components/hooks/forms/library-form";
 
 type LibraryType = {
   id: string;
@@ -24,8 +34,10 @@ type LibraryType = {
 };
 
 const ShowBookInfo = ({ book }: any) => {
+  const [open, setOpen] = useState(false);
   const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
   const [enableSelect, setEnableSelect] = useState(false);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchLibraries = async () => {
@@ -44,11 +56,7 @@ const ShowBookInfo = ({ book }: any) => {
     };
 
     fetchLibraries();
-  }, []);
-
-  const addLibrary = () => {
-    // FIX: implement the addLibrary function
-  };
+  }, [count]);
 
   const submitBookInfo = async () => {
     const {
@@ -92,6 +100,9 @@ const ShowBookInfo = ({ book }: any) => {
       isbn10,
     };
 
+    // FIX: Get value of the selected library.
+
+    // FIX: Insert book and library to joined table.
     const response = await saveBook(BookInfo);
 
     if (response.error) {
@@ -103,7 +114,6 @@ const ShowBookInfo = ({ book }: any) => {
   };
 
   return (
-    // FIX: fix the UI and spread the component to different components if needed.
     <div className="flex flex-col gap-10">
       <Book bookInfo={book}>
         <div className="flex flex-col md:flex-row">
@@ -113,18 +123,18 @@ const ShowBookInfo = ({ book }: any) => {
               className="w-auto h-96 object-contain rounded-2xl"
             />
           </div>
-          <div className="flex flex-col md:basis-2/3 h-fit md:h-screen max-h-96">
+          <div className="flex flex-col md:basis-2/3 h-fit md:h-screen md:max-h-96">
             <Book.Title />
             <Book.Subtitle />
             <Book.Authors />
             <Book.Categories />
-            <div className="grid grid-cols-2 grid-rows-2 gap-y-5 pb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-y-5 pb-10">
               <Book.Released date={book.publishedDate} />
               <Book.Language />
               <Book.Length pages={book.pageCount} />
               <Book.Publisher />
             </div>
-            <div className="w-full flex justify-start items-center gap-10">
+            <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center gap-3 md:gap-10">
               <div>
                 <div className="flex gap-3">
                   <Select>
@@ -143,12 +153,21 @@ const ShowBookInfo = ({ book }: any) => {
                         ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    className="bg-background text-foreground text-lg font-light shadow-lg border-[1px] border-foreground/10 hover:bg-background hover:scale-105"
-                    onClick={addLibrary}
-                  >
-                    +
-                  </Button>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger>+</DialogTrigger>
+                    <DialogContent className="w-full max-w-xl">
+                      <DialogHeader>
+                        <DialogTitle>Create a new Library</DialogTitle>
+                        <DialogDescription></DialogDescription>
+                      </DialogHeader>
+                      <LibraryForm
+                        onSuccess={() => {
+                          setOpen(false);
+                          setCount(count + 1);
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 {!enableSelect && (
                   <p className="text-sm italic text-foreground/50">
@@ -156,11 +175,7 @@ const ShowBookInfo = ({ book }: any) => {
                   </p>
                 )}
               </div>
-              <Button
-                className="md:hover:scale-105"
-                onClick={submitBookInfo}
-              >
-                {/* FIX: Add the selection option (or create new) */}
+              <Button className="md:hover:scale-105" onClick={submitBookInfo}>
                 Add Book to Library
               </Button>
             </div>

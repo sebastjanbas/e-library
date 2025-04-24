@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { BookSchema } from "@/schemas";
+import { BookSchema, LibraryType } from "@/schemas";
 import { createClient } from "@/utils/supabase/server";
 
 export const saveBook = async (values: z.infer<typeof BookSchema>) => {
@@ -102,3 +102,20 @@ export const removeBook = async (id: string) => {
     return { success: "Book successfully deleted!" };
   }
 };
+
+export const createLibrary = async (values : z.infer<typeof LibraryType>) => {
+  const supabase = await createClient()
+  const {data : {user}} = await supabase.auth.getUser()
+
+  const libraryData = {
+    user_id: user?.id,
+    name: values.name,
+    description: values.description,
+  }
+  const {error} = await supabase.from("libraries").insert(libraryData)
+
+  if (error){
+    return {error: "Error creating a library: " + error.message}
+  }
+  return {success: "Library created successfully!"}
+}
