@@ -12,7 +12,7 @@ export async function BookServerDetails({ bookId }: { bookId: string }) {
 
 const { data: libData, error:libError } = await supabase
   .from("library_books")
-  .select("library:libraries(name)")
+  .select("reading_status, custom_notes, library:libraries(name)")
   .eq("book_id", bookId)
 
   if (error) return <p>Error loading book.</p>;

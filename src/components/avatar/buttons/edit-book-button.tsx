@@ -51,20 +51,20 @@ const EditBookButton = ({ book }: { book: BookType }) => {
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">
-            <HiOutlineCog size={24} strokeWidth={1.5} className="text-white" />
+            <HiOutlineCog size={24} strokeWidth={1.5} />
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom">
+          <DropdownMenuContent align="start" side="bottom" className="rounded-sm">
             <DialogTrigger className="w-full cursor-pointer">
-              <DropdownMenuItem className="w-full cursor-pointer">
+              <DropdownMenuItem className="w-full cursor-pointer rounded-xs text-xs">
                 Edit
               </DropdownMenuItem>
             </DialogTrigger>
             <AlertDialogTrigger className="w-full cursor-pointer">
               <DropdownMenuItem
                 variant="destructive"
-                className="w-full cursor-pointer"
+                className="w-full cursor-pointer rounded-xs text-xs"
               >
-                Remove
+               Delete 
               </DropdownMenuItem>
             </AlertDialogTrigger>
           </DropdownMenuContent>

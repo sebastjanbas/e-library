@@ -1,5 +1,6 @@
 "use client";
 import { formatDate, languageMap } from "@/lib/docs";
+import { cn } from "@/lib/utils";
 import { BookType } from "@/schemas";
 import { Building, CalendarDays, Ruler } from "lucide-react";
 import Image from "next/image";
@@ -14,6 +15,7 @@ import { IoIosGlobe } from "react-icons/io";
 
 type BookContextType = PropsWithChildren & {
   bookInfo: BookType;
+  className?: string;
 };
 
 const BookContext = createContext<BookContextType | undefined>(undefined);
@@ -26,10 +28,14 @@ const useBookContext = () => {
   return context;
 };
 
-export default function Book({ bookInfo, children }: BookContextType) {
+export default function Book({
+  bookInfo,
+  className,
+  children,
+}: BookContextType) {
   return (
     <BookContext.Provider value={{ bookInfo }}>
-      <div className="w-full max-w-6xl">{children}</div>
+      <div className={cn("w-full max-w-6xl", className)}>{children}</div>
     </BookContext.Provider>
   );
 }
@@ -58,12 +64,26 @@ Book.Image = function BookImage({
   );
 };
 
-Book.Title = function BookTitle() {
+Book.Title = function BookTitle({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   const { bookInfo } = useBookContext();
   return (
-    <p className="w-full text-center md:text-start text-2xl md:text-3xl font-semibold pb-1">
-      {bookInfo.title}
-    </p>
+    <h1
+      className={cn(
+        "w-full text-center md:text-start text-2xl md:text-3xl font-semibold pb-1",
+        className,
+      )}
+    >
+      <span className="flex flex-col-reverse md:inline-block md:space-x-8 gap-y-5">
+        <span className="break-words">{bookInfo.title}</span>
+        {children}
+      </span>
+    </h1>
   );
 };
 

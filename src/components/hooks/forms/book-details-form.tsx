@@ -101,7 +101,7 @@ const BookDetailsForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 w-full h-full flex flex-col justify-between"
+        className="space-y-8 w-full h-full flex flex-col justify-between p-1"
       >
         <div className="grid md:grid-cols-2 gap-6">
           {/* Column 1 */}

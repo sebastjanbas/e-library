@@ -49,10 +49,11 @@ const ISBNForm = () => {
     <>
       <div className="border-black border-[1px] p-5 h-full w-full md:w-fit">
         <div
-          className={`overflow-hidden w-full transition-all duration-1000 ease-in-out p-5 ${expanded
+          className={`overflow-hidden w-full transition-all duration-1000 ease-in-out p-5 ${
+            expanded
               ? "max-h-[3000px] max-w-[1000px]"
               : "max-h-28 w-full md:max-w-52"
-            }`}
+          }`}
         >
           <Button
             onClick={() => setExpanded(!expanded)}
@@ -72,9 +73,15 @@ const ISBNForm = () => {
             placeholder="ISBN number"
             value={isbn}
             onChange={(e) => setIsbn(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                fetchBookData();
+              }
+            }}
           />
           <Button
-            type="button"
+            type="submit"
             onClick={fetchBookData}
             disabled={isLoading}
             className="w-full rounded-full"
