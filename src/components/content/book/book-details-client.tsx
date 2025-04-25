@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import EditBookButton from "@/components/avatar/buttons/edit-book-button";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,13 @@ import { InfoIcon } from "lucide-react";
 import React from "react";
 import Book from "./book-details";
 
-const BookDetailsClient = ({ book }: { book: BookType }) => {
-  // FIX: add the library tag in the book info (and an option to change, and add the library)
+type BookDetailsProps = {
+  book: BookType;
+  libraries: any;
+};
+
+const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
+  // FIX: the library situation (and an option to change, and add the library)
   return (
     <Book bookInfo={book}>
       <div className="flex flex-col md:flex-row gap-10 items-stretch">
@@ -30,6 +36,23 @@ const BookDetailsClient = ({ book }: { book: BookType }) => {
             <Book.Subtitle />
             <Book.Authors />
             <Book.Categories />
+            <div className="inline-flex items-center justify-start gap-5 pb-5">
+              <p className="text-sm italic">The book is located in:</p>
+              {libraries.length > 0 ? (
+                libraries.map((lib: {library: {name: string}}, i: number) => (
+                  <p
+                    className="font-semibold py-2 px-4 border-[1px] border-foreground/20 w-fit rounded-lg"
+                    key={i}
+                  >
+                    {lib.library.name}
+                  </p>
+                ))
+              ) : (
+                <p className="text-destructive italic">
+                  Book not linked to library
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="relative rounded-2xl px-4 py-3 bg-[#848A95] w-full md:w-fit">
@@ -45,8 +68,7 @@ const BookDetailsClient = ({ book }: { book: BookType }) => {
               </h1>
               <DialogContent className="max-w-xl">
                 <DialogHeader className="flex flex-row w-full items-start justify-start h-14">
-                  <Book.Image className="w-auto h-full object-contain rounded-xs"
- />
+                  <Book.Image className="w-auto h-full object-contain rounded-xs" />
                   <div className="flex flex-col">
                     <DialogTitle className="text-[1.3rem]">
                       Edition Details

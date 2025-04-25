@@ -88,7 +88,7 @@ Book.Authors = function BookAuthors() {
 Book.Categories = function BookCategories() {
   const { bookInfo } = useBookContext();
   return (
-    <p className="text-sm pb-10 italic w-full text-center md:text-start">
+    <p className="text-sm pb-7 italic text-center md:text-start">
       {bookInfo.categories?.join(", ") ?? "Unknown"}
     </p>
   );

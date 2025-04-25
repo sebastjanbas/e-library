@@ -20,8 +20,15 @@ import { updateBookInfo } from "@/actions/book-actions";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { CategoryInput } from "./form-components/category-input";
 
-const BookDetailsForm = ({ bookInfo }: { bookInfo?: BookType }) => {
+const BookDetailsForm = ({
+  bookInfo,
+  onSuccess,
+}: {
+  bookInfo?: BookType;
+  onSuccess?: () => void;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -81,10 +88,12 @@ const BookDetailsForm = ({ bookInfo }: { bookInfo?: BookType }) => {
       toast.error(response.error);
     } else {
       toast.success(response.success);
+      if (onSuccess) {
+        onSuccess();
+      }
     }
     setIsLoading(false);
     router.refresh();
-    // window.location.reload();
   };
   // md:w-[400px] lg:w-[600px] xl:w-[800px]
 
@@ -280,7 +289,6 @@ const BookDetailsForm = ({ bookInfo }: { bookInfo?: BookType }) => {
                 </FormItem>
               )}
             />
-            {/* FIX: add category selection for easier use */}
             <div className="space-y-2">
               <FormLabel>Categories</FormLabel>
               {categoryFields.map((_, index) => (
@@ -290,13 +298,10 @@ const BookDetailsForm = ({ bookInfo }: { bookInfo?: BookType }) => {
                   name={`categories.${index}`}
                   render={({ field }) => (
                     <FormItem className="flex gap-2">
-                      <FormControl>
-                        <Input
-                          disabled={isLoading}
-                          placeholder={`Category ${index + 1}`}
-                          {...field}
-                        />
-                      </FormControl>
+                      <CategoryInput
+                        field={field}
+                        placeholder={`Category ${index + 1}`}
+                      />
                       <Button
                         type="button"
                         variant="ghost"

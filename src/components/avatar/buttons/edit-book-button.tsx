@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineCog } from "react-icons/hi";
 import {
   DropdownMenu,
@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 
 const EditBookButton = ({ book }: { book: BookType }) => {
+  const [open, setOpen] = useState(false);
   const handleRemove = async () => {
     const response = await removeBook(book?.id);
 
@@ -46,7 +47,7 @@ const EditBookButton = ({ book }: { book: BookType }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">
@@ -75,7 +76,7 @@ const EditBookButton = ({ book }: { book: BookType }) => {
           </DialogHeader>
 
           <div className="flex-1 w-full overflow-y-auto">
-            <BookDetailsForm bookInfo={book} />
+            <BookDetailsForm bookInfo={book} onSuccess={() => setOpen(false)} />
           </div>
         </DialogContent>
         <AlertDialogContent>

@@ -3,13 +3,20 @@ import BookDetailsClient from "./book-details-client";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
   const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("books")
     .select("*")
     .eq("id", bookId)
     .single();
 
-  if (error) return <p>Error loading book.</p>;
+const { data: libData, error:libError } = await supabase
+  .from("library_books")
+  .select("library:libraries(name)")
+  .eq("book_id", bookId)
 
-  return <BookDetailsClient book={data} />;
+  if (error) return <p>Error loading book.</p>;
+  if (libError) return <p>Error loading Library</p>;
+
+  return <BookDetailsClient book={data} libraries={libData} />;
 }
