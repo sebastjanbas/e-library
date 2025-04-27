@@ -1,0 +1,17 @@
+import Roomlist from '@/components/content/libraries/room-list'
+import RoomListSkeletoon from '@/components/content/skeletons/room-list-skeleton'
+import React, { Suspense } from 'react'
+
+const RoomsPage = () => {
+  // FIX: add the list view
+  return (
+    <div className='mt-20 p-5'>
+      <h1>ROOM PAGE</h1>
+      <Suspense fallback={<RoomListSkeletoon />}>
+        <Roomlist />
+      </Suspense>
+    </div>
+  )
+}
+
+export default RoomsPage

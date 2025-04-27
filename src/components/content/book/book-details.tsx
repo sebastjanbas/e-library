@@ -79,7 +79,7 @@ Book.Title = function BookTitle({
         className,
       )}
     >
-      <span className="flex flex-col-reverse md:inline-block md:space-x-8 gap-y-5">
+      <span className="flex flex-col-reverse md:inline-block md:space-x-8 gap-y-5 mr-16">
         <span className="break-words">{bookInfo.title}</span>
         {children}
       </span>

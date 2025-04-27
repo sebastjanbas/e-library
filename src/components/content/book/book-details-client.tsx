@@ -5,6 +5,7 @@ import React from "react";
 import Book from "./book-details";
 import { Badge } from "@/components/ui/badge";
 import { BookType } from "@/schemas";
+import { FaStar } from "react-icons/fa6";
 
 type BookDetailsProps = {
   book: BookType;
@@ -16,14 +17,14 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
   const badgeStatus = {
     not_started: "Not Started",
     reading: "Reading",
-    completed: "Completed",
+    finished: "Finished",
   } as const;
   type ReadingStatus = keyof typeof badgeStatus;
   const status = libraries[0].reading_status as ReadingStatus;
 
   return (
     <Book bookInfo={book} className="relative">
-      <div className="absolute top-2 right-20 w-fit h-fit">
+      <div className="absolute top-[6px] right-10 w-fit h-fit">
         <EditBookButton book={book} />
       </div>
       <div className="flex flex-col md:flex-row gap-10">
@@ -32,12 +33,22 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
         </div>
         <div className="flex flex-col md:basis-2/3 h-fit md:h-screen md:max-h-96">
           <Book.Title className="w-fit flex self-center md:self-start">
-            <Badge
-              className="w-fit h-fit flex self-center md:inline-block"
-              variant={status}
-            >
-              {badgeStatus[status]}
-            </Badge>
+            <div className="md:inline-block -translate-y-1">
+              <div className="flex flex-row items-center gap-2">
+              <Badge
+                className="w-fit h-fit flex"
+                variant={status}
+              >
+                {badgeStatus[status]}
+              </Badge>
+              <Badge
+                className="w-fit h-[23px] flex self-center"
+                variant={"favorite"}
+              >
+                <FaStar />
+              </Badge>
+              </div>
+            </div>
           </Book.Title>
 
           <Book.Subtitle />

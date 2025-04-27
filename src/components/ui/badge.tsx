@@ -18,11 +18,13 @@ const badgeVariants = cva(
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         not_started: 
-          "border-transparent bg-blue-300 text-primary-foreground [a&]:hover:bg-primary/90",
+          "border-transparent bg-red-300 text-primary-foreground [a&]:hover:bg-primary/90",
         reading: 
           "border-transparent bg-orange-300 text-primary-foreground [a&]:hover:bg-primary/90",
-        completed: 
+        finished: 
           "border-transparent bg-emerald-400 text-primary-foreground [a&]:hover:bg-primary/90",
+        favorite: 
+          "border-transparent bg-blue-400 text-primary-foreground [a&]:hover:bg-primary/90",
 
       },
     },

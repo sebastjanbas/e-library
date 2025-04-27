@@ -11,13 +11,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Archive, CircleHelp, LogOut, User as UserLogo, Users } from "lucide-react";
+import {
+  Archive,
+  CircleHelp,
+  LogOut,
+  User as UserLogo,
+  Users,
+} from "lucide-react";
 import { logout } from "@/actions/login";
 import { useUser } from "@/store/useUser";
+import { Button } from "@/components/ui/button";
 
 const DashboardNavbar = () => {
-
-  const {user} = useUser();
+  const { user } = useUser();
 
   const handleClick = async () => {
     const response = await logout();
@@ -38,6 +44,9 @@ const DashboardNavbar = () => {
           />
         </Link>
       </div>
+      <Button asChild variant={"link"}>
+      <Link href={"/rooms"}>Rooms</Link>
+      </Button>
       <div className="flex flex-row gap-2 items-center justify-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
