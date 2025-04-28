@@ -1,3 +1,10 @@
+export  const badgeStatus = {
+    not_started: "Not Started",
+    reading: "Reading",
+    finished: "Finished",
+  } as const;
+  export type ReadingStatus = keyof typeof badgeStatus;
+
 
 export const formatDate = (
   dateString: string,

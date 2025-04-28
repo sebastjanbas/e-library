@@ -85,11 +85,11 @@ const ShowBookInfo = ({ book }: any) => {
     const isbn13 =
       industryIdentifiers?.[0]?.type == "ISBN_13"
         ? industryIdentifiers?.[0]?.identifier
-        : industryIdentifiers?.[1].identifier;
+        : industryIdentifiers?.[1]?.identifier;
     const isbn10 =
       industryIdentifiers?.[0]?.type == "ISBN_10"
         ? industryIdentifiers?.[0]?.identifier
-        : industryIdentifiers?.[1].identifier;
+        : industryIdentifiers?.[1]?.identifier;
 
     const BookInfo = {
       title,

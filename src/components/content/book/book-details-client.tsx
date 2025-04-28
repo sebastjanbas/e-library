@@ -6,6 +6,7 @@ import Book from "./book-details";
 import { Badge } from "@/components/ui/badge";
 import { BookType } from "@/schemas";
 import { FaStar } from "react-icons/fa6";
+import { badgeStatus, ReadingStatus } from "@/lib/docs";
 
 type BookDetailsProps = {
   book: BookType;
@@ -14,12 +15,6 @@ type BookDetailsProps = {
 
 const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
   // FIX: the library situation (and an option to change, and add the library)
-  const badgeStatus = {
-    not_started: "Not Started",
-    reading: "Reading",
-    finished: "Finished",
-  } as const;
-  type ReadingStatus = keyof typeof badgeStatus;
   const status = libraries[0].reading_status as ReadingStatus;
 
   return (
