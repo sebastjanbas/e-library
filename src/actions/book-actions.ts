@@ -154,3 +154,16 @@ export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
   }
   return { success: "Library created successfully!" };
 };
+
+export const updateReadingStatus = async (status: string, id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("library_books")
+    .update({ reading_status: status })
+    .eq("book_id", id);
+  console.log(error)
+  if (error) {
+    return { error: "Error updating reading status" };
+  }
+  return;
+};

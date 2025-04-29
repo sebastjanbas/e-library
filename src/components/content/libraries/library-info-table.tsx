@@ -95,7 +95,7 @@ const booksForSearch = libraryBooks
             >
               <TableCell className="font-medium">{i + 1}</TableCell>
               <TableCell>{book.title}</TableCell>
-              <TableCell className="overflow-hidden max-w-[300px] xl:max-w-[500px]">
+              <TableCell className="overflow-x-scroll max-w-[300px] xl:max-w-[500px]">
                 {book.authors?.join(", ")}
               </TableCell>
               <TableCell

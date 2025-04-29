@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import EditBookButton from "@/components/avatar/buttons/edit-book-button";
-import React from "react";
+import React, { useState } from "react";
 import Book from "./book-details";
 import { Badge } from "@/components/ui/badge";
 import { BookType } from "@/schemas";
 import { FaStar } from "react-icons/fa6";
 import { badgeStatus, ReadingStatus } from "@/lib/docs";
+import { Button } from "@/components/ui/button";
+import { updateReadingStatus } from "@/actions/book-actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type BookDetailsProps = {
   book: BookType;
@@ -16,6 +20,27 @@ type BookDetailsProps = {
 const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
   // FIX: the library situation (and an option to change, and add the library)
   const status = libraries[0].reading_status as ReadingStatus;
+  const router = useRouter();
+  const readingS = [
+    { status: "not_started", value: "Start Reading" },
+    { status: "reading", value: "Finished" },
+    { status: "finished", value: "Reset" },
+  ];
+  const idx = readingS.findIndex((item) => item.status === status);
+  const [index, setIndex] = useState(idx);
+  const [reading, setReading] = useState<string>(readingS[idx].value);
+  const [loading, setLoading] = useState(false);
+
+  const updateStatus = async (status: string) => {
+    setLoading(true);
+
+    const response = await updateReadingStatus(status, book.id);
+    if (response?.error) {
+      toast.error(response.error);
+    }
+    router.refresh();
+    setLoading(false);
+  };
 
   return (
     <Book bookInfo={book} className="relative">
@@ -30,18 +55,15 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
           <Book.Title className="w-fit flex self-center md:self-start">
             <div className="md:inline-block -translate-y-1">
               <div className="flex flex-row items-center gap-2">
-              <Badge
-                className="w-fit h-fit flex"
-                variant={status}
-              >
-                {badgeStatus[status]}
-              </Badge>
-              <Badge
-                className="w-fit h-[23px] flex self-center"
-                variant={"favorite"}
-              >
-                <FaStar />
-              </Badge>
+                <Badge className="w-fit h-fit flex" variant={status}>
+                  {badgeStatus[status]}
+                </Badge>
+                <Badge
+                  className="w-fit h-[23px] flex self-center"
+                  variant={"favorite"}
+                >
+                  <FaStar />
+                </Badge>
               </div>
             </div>
           </Book.Title>
@@ -55,17 +77,34 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
             <Book.Length />
             <Book.Publisher />
           </div>
-          <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center gap-3 md:gap-10">
+          <div className="w-full flex flex-col md:flex-row justify-between md:pr-16 items-start md:items-center gap-3 md:gap-10">
+            <Button
+              disabled={loading}
+              onClick={() => {
+                updateStatus(readingS[(index + 1) % 3].status);
+                setReading(readingS[(index + 1) % 3].value);
+                setIndex((index + 1) % 3);
+              }}
+              className="py-5 px-4 bg-background hover:bg-foreground/5 rounded-lg text-foreground text-md font-semibold border-[1px] border-foreground/20"
+            >
+              {reading}
+            </Button>
             <div>
               {libraries.length > 0 ? (
                 libraries.map(
-                  (lib: { library: { name: string } }, i: number) => (
-                    <p
-                      className="font-semibold py-2 px-4 border-[1px] border-foreground/20 w-fit rounded-lg"
+                  (
+                    lib: { library: { id: string; name: string } },
+                    i: number,
+                  ) => (
+                    <Button
+                      onClick={() => {
+                        router.push(`/rooms/${lib.library.id}`);
+                      }}
+                      className="py-5 px-4 bg-background hover:bg-foreground/5 rounded-lg text-foreground text-md font-semibold border-[1px] border-foreground/20"
                       key={i}
                     >
                       {lib.library.name}
-                    </p>
+                    </Button>
                   ),
                 )
               ) : (
