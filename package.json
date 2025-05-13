@@ -26,6 +26,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
     "fuse.js": "^7.1.0",
     "lucide-react": "^0.483.0",
     "motion": "^12.6.5",
@@ -45,13 +47,16 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "20.17.30",
+    "@types/pg": "^8.15.1",
     "@types/react": "19.0.12",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
+    "drizzle-kit": "^0.31.1",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.4",
     "typescript": "5.8.2"
   }
 }
