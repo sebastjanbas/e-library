@@ -3,7 +3,6 @@ import RoomListSkeletoon from '@/components/content/skeletons/room-list-skeleton
 import React, { Suspense } from 'react'
 
 const RoomsPage = () => {
-  // FIX: add the list view
   return (
     <div className='mt-20 p-5'>
       <h1>ROOM PAGE</h1>
