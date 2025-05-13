@@ -1,15 +1,15 @@
 import "dotenv/config";
-import { eq } from "drizzle-orm";
+// import { eq } from "drizzle-orm";
 import { usersTable } from "./db/schema";
 import { db } from "./db";
 
 async function main() {
-  const user: typeof usersTable.$inferInsert = {
-    firstName: "Martin",
-    lastName: "Maroni",
-    username: "martoniMaroni",
-    email: "maronini@example.com",
-  };
+  // const user: typeof usersTable.$inferInsert = {
+  //   firstName: "Martin",
+  //   lastName: "Maroni",
+  //   username: "martoniMaroni",
+  //   email: "maronini@example.com",
+  // };
 
   // await db.insert(usersTable).values(user);
   // console.log("New user created!");

@@ -1,4 +1,4 @@
-// app/test-db/page.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { testConnection } from "@/actions/database-test";
 import { useState } from "react";
@@ -11,7 +11,8 @@ export default function TestDbPage() {
       const res = await testConnection();
       console.log(res);
       setResult(res);
-    } catch (e) {
+    } catch (e:any) {
+      console.log("Error: ", e)
       setResult("Error connecting to DB.");
     }
   }
