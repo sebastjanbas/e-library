@@ -3,14 +3,17 @@ import { z } from "zod";
 import { BookSchema, LibraryType } from "@/schemas";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
-import { booksTable, librariesTable, usersTable } from "@/db/schema";
+import { booksTable } from "@/db/schema";
 import { setUserSession } from "./book-db";
+import { createClient } from "@/utils/supabase/server";
 
 export const saveBook = async (
   values: z.infer<typeof BookSchema>,
   library: string,
 ) => {
   const {userId} = await auth()
+  
+  console.log(library);
   
 
   if (!userId) {

@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 
 import { z } from "zod";
 import { LoginScema, RegisterScema } from "@/schemas";
+import { createClient } from "@/utils/supabase/server";
 
 export async function login(values: z.infer<typeof LoginScema>) {
   const validatedData = LoginScema.safeParse(values);

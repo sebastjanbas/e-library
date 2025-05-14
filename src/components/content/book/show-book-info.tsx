@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { saveBook } from "@/actions/book-actions";
 import { redirect } from "next/navigation";
@@ -14,23 +14,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import Book from "./book-details";
 import LibraryForm from "@/components/hooks/forms/library-form";
 
-type LibraryType = {
-  id: string;
-  name: string;
-  user_id: string;
-  description: string;
-  created_at: string;
-};
+// type LibraryType = {
+//   id: string;
+//   name: string;
+//   user_id: string;
+//   description: string;
+//   created_at: string;
+// };
 
 const ShowBookInfo = ({ book }: any) => {
   // const [library, setLibrary] = useState<string>("")
