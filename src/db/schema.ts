@@ -16,13 +16,13 @@ export const usersTable = pgTable("users", {
   id: uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  username: varchar({ length: 20 }),
-  firstName: text(),
-  lastName: text(),
-  avararUrl: text(),
+  clerk_id: varchar({length: 255}).notNull().unique(),
+  username: text(),
+  first_name: text(),
+  last_name: text(),
+  avatar_url: text(),
   email: varchar({ length: 320 }).unique().notNull(), // email max length 64 (before @), 255 domain part.
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(), // FIX: need to create a postgres trigger to auto-update
+  created_at: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const booksTable = pgTable("books", {
@@ -31,17 +31,21 @@ export const booksTable = pgTable("books", {
     .default(sql`gen_random_uuid()`),
 
   title: text().notNull(),
+  subtitle: text(),
   authors: text().array(),
   publisher: text(),
-  publishedDate: text(),
-  isbn10: text(),
-  isbn13: text(),
-  pageCount: integer(),
-  coverUrl: text(),
+  published_date: text(),
+  isbn_10: text(),
+  isbn_13: text(),
+  page_count: integer(),
+  cover_url: text(),
+  categories: text().array(),
+  language: text(),
+  info_link: text(),
   description: text(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  created_at: timestamp({ withTimezone: true }).defaultNow(),
 
-  userId: uuid()
+  user_id: uuid()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
 });
@@ -50,26 +54,26 @@ export const librariesTable = pgTable("libraries", {
   id: uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  userId: uuid()
+  user_id: uuid()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   name: text().notNull(),
   description: text(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  created_at: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const libraryBooksTable = pgTable("libraryBooks", {
   id: uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  libraryId: uuid()
+  library_id: uuid()
     .notNull()
     .references(() => librariesTable.id, { onDelete: "cascade" }),
-  bookId: uuid()
+  book_id: uuid()
     .notNull()
     .references(() => booksTable.id, { onDelete: "cascade" }),
-  addedAt: timestamp({ withTimezone: true }).defaultNow(),
-  readingStatus: text({ enum: ["not_started", "reading", "finished"] }).default(
+  added_at: timestamp({ withTimezone: true }).defaultNow(),
+  reading_status: text({ enum: ["not_started", "reading", "finished"] }).default(
     "not_started",
   ),
   notes: text(),
@@ -81,15 +85,15 @@ export const sharedBooksTable = pgTable(
     id: uuid()
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    bookId: uuid()
+    book_id: uuid()
       .notNull()
       .references(() => booksTable.id, { onDelete: "cascade" }),
-    sharedWith: uuid()
+    shared_with: uuid()
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
-    sharedAt: timestamp({ withTimezone: true }).defaultNow(),
+    shared_at: timestamp({ withTimezone: true }).defaultNow(),
   },
-  (table) => [unique().on(table.bookId, table.sharedWith)],
+  (table) => [unique().on(table.book_id, table.shared_with)],
 );
 
 export const sharedLibrariesTable = pgTable(
@@ -98,16 +102,16 @@ export const sharedLibrariesTable = pgTable(
     id: uuid()
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    libraryId: uuid()
+    library_id: uuid()
       .notNull()
       .references(() => librariesTable.id, { onDelete: "cascade" }),
-    sharedWith: uuid()
+    shared_with: uuid()
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
-    canEdit: boolean().default(false),
-    sharedAt: timestamp({ withTimezone: true }).defaultNow(),
+    can_edit: boolean().default(false),
+    shared_at: timestamp({ withTimezone: true }).defaultNow(),
   },
-  (table) => [unique().on(table.libraryId, table.sharedWith)],
+  (table) => [unique().on(table.library_id, table.shared_with)],
 );
 
 export const tagsTable = pgTable("tabs", {
@@ -115,7 +119,7 @@ export const tagsTable = pgTable("tabs", {
     .primaryKey()
     .default(sql`gen_random_uuid()`),
   name: uuid().unique().notNull(),
-  createAt: timestamp({ withTimezone: true }).defaultNow(),
+  create_at: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const bookTagsTable = pgTable(
@@ -124,44 +128,44 @@ export const bookTagsTable = pgTable(
     id: uuid()
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    bookId: uuid()
+    book_id: uuid()
       .notNull()
       .references(() => booksTable.id, { onDelete: "cascade" }),
-    tagId: uuid()
+    tag_id: uuid()
       .notNull()
       .references(() => tagsTable.id, { onDelete: "cascade" }),
   },
-  (table) => [unique().on(table.bookId, table.tagId)],
+  (table) => [unique().on(table.book_id, table.tag_id)],
 );
 
 export const bookNotesTable = pgTable("bookNotes", {
   id: uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  bookId: uuid()
+  book_id: uuid()
     .notNull()
     .references(() => booksTable.id, { onDelete: "cascade" }),
-  userId: uuid()
+  user_id: uuid()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   note: text().notNull(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  created_at: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const activityLogTable = pgTable("activityLog", {
   id: uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  userId: uuid()
+  user_id: uuid()
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   action: text().notNull(),
-  bookId: uuid()
+  book_id: uuid()
     .notNull()
     .references(() => booksTable.id, { onDelete: "cascade" }),
-  libraryId: uuid()
+  library_id: uuid()
     .notNull()
     .references(() => librariesTable.id, { onDelete: "cascade" }),
   details: jsonb(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  created_at: timestamp({ withTimezone: true }).defaultNow(),
 });

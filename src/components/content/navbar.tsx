@@ -2,7 +2,6 @@
 import React from "react";
 import Image from "next/image";
 import LoginDialog from "./login-dialog";
-import SignupDialog from "./signup-dialog";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -20,9 +19,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex gap-2">
-          <LoginDialog trigger="Log in" navbar />
-          <div className="h-[30px] w-[1px] bg-foreground/30"></div>
-          <SignupDialog trigger="Sign up" navbar />
+          <LoginDialog trigger="Sign in" navbar />
         </div>
       </div>
     </div>

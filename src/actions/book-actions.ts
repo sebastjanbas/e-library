@@ -1,59 +1,60 @@
 "use server";
 import { z } from "zod";
 import { BookSchema, LibraryType } from "@/schemas";
-import { createClient } from "@/utils/supabase/server";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/db";
+import { booksTable, librariesTable, usersTable } from "@/db/schema";
+import { setUserSession } from "./book-db";
 
 export const saveBook = async (
   values: z.infer<typeof BookSchema>,
   library: string,
 ) => {
-  const supabase = await createClient();
+  const {userId} = await auth()
+  
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  if (!userId) {
     return { error: "User not authenticated!" };
   }
 
-  // 1. Find all books with same ISBN and same user
-  const { data: existingBooks, error: bookLookupError } = await supabase
-    .from("books")
-    .select("id")
-    .or(`isbn_13.eq.${values.isbn13},isbn_10.eq.${values.isbn10}`)
-    .eq("user_id", user?.id);
+  await setUserSession()
 
-  if (bookLookupError) {
-    return { error: "Error checking for existing book." };
-  }
+  // // 1. Find all books with same ISBN and same user
+  // const { data: existingBooks, error: bookLookupError } = await supabase
+  //   .from("books")
+  //   .select("id")
+  //   .or(`isbn_13.eq.${values.isbn13},isbn_10.eq.${values.isbn10}`)
+  //   .eq("user_id", user?.id);
 
-  // 2. If any book exists, check if any of them are already linked to the given library
-  if (existingBooks && existingBooks.length > 0) {
-    const existingBookIds = existingBooks.map((book) => book.id);
+  // if (bookLookupError) {
+  //   return { error: "Error checking for existing book." };
+  // }
 
-    const { data: existingLinks, error: linkError } = await supabase
-      .from("library_books")
-      .select("id")
-      .in("book_id", existingBookIds)
-      .eq("library_id", library);
+  // // 2. If any book exists, check if any of them are already linked to the given library
+  // if (existingBooks && existingBooks.length > 0) {
+  //   const existingBookIds = existingBooks.map((book) => book.id);
 
-    if (linkError) {
-      return { error: "Error checking if book already exists in library." };
-    }
+  //   const { data: existingLinks, error: linkError } = await supabase
+  //     .from("library_books")
+  //     .select("id")
+  //     .in("book_id", existingBookIds)
+  //     .eq("library_id", library);
 
-    if (existingLinks && existingLinks.length > 0) {
-      return { error: "This book already exists in the selected library." };
-    }
-  }
+  //   if (linkError) {
+  //     return { error: "Error checking if book already exists in library." };
+  //   }
+
+  //   if (existingLinks && existingLinks.length > 0) {
+  //     return { error: "This book already exists in the selected library." };
+  //   }
+  // }
 
   if (values.thumbnailUrl) {
     values.thumbnailUrl = `https://images-na.ssl-images-amazon.com/images/P/${values.isbn10}.01._SX360_SCLZZZZZZZ_.jpg`;
   }
 
   const bookInfo = {
-    user_id: user?.id,
+    user_id: userId,
     title: values.title,
     subtitle: values.subtitle,
     authors: values.authors,
@@ -69,25 +70,25 @@ export const saveBook = async (
     info_link: values.infoUrl,
   };
 
-  const { data: bookData, error: insertError } = await supabase
-    .from("books")
-    .insert(bookInfo)
-    .select("id")
-    .single();
+  const bookResponse = await db.insert(booksTable).values(bookInfo)
+  
+  console.log("Book response: ", bookResponse)
 
-  if (insertError || !bookData) {
-    return { error: "Failed to save book." };
-  }
+  // if (insertError || !bookData) {
+  //   return { error: "Failed to save book." };
+  // }
 
-  const { error: libraryError } = await supabase.from("library_books").insert({
-    library_id: library,
-    book_id: bookData.id,
-    reading_status: "not_started",
-  });
+  // const libraryResponse = await db.insert(librariesTable).values({
+  //   library_id: library,
+  //   book_id: bookData.id,
+  //   reading_status: "not_started",
+  // })
+  // console.log("Library response: ", libraryResponse)
 
-  if (libraryError) {
-    return { error: "Something went wrong!" + libraryError.message };
-  }
+  // if (libraryError) {
+  //   return { error: "Something went wrong!" + libraryError.message };
+  // }
+
 
   return { success: "Successfully saved!" };
 };

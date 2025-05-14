@@ -1,29 +1,34 @@
 import React from "react";
-import { BookList } from "../protected/user/dashboard/book-list";
-import { BookCategories } from "@/lib/docs";
-import { createClient } from "@/utils/supabase/server";
-import { toast } from "sonner";
+// import { BookList } from "../protected/user/dashboard/book-list";
+// import { BookCategories } from "@/lib/docs";
+// import { toast } from "sonner";
+import { getBooks } from "@/actions/book-db";
 
 const BookDashboardList = async () => {
-  const supabase = await createClient();
-  const {
-    data: allBooks,
-    count,
-    error,
-  } = await supabase
-    .from("books")
-    .select("id, title, description, categories, cover_url", {
-      count: "exact",
-    });
+  // const {
+  //   data: allBooks,
+  //   count,
+  //   error,
+  // } = await supabase
+  //   .from("books")
+  //   .select("id, title, description, categories, cover_url", {
+  //     count: "exact",
+  //   });
 
-  if (error) {
-    toast.error("Error loading books!");
-  }
-  if (count === 0) return <p>Add your first book to see statistics</p>;
+  // if (error) {
+  //   toast.error("Error loading books!");
+  // }
+
+  const books = await getBooks();
+
+  console.log("Books: ", books);
+
+  if (books.length === 0) return <p>Add your first book to see statistics</p>;
 
   return (
     <>
-      <div>
+      <p>Book list</p>
+      {/* <div>
         <p>ALL</p>
         <BookList list={allBooks} />
       </div>
@@ -47,7 +52,7 @@ const BookDashboardList = async () => {
             }
           />
         </div>
-      ))}
+      ))} */}
     </>
   );
 };

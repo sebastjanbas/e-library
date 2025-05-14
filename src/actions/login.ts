@@ -1,7 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
 
-import { createClient } from "@/utils/supabase/server";
 import { z } from "zod";
 import { LoginScema, RegisterScema } from "@/schemas";
 

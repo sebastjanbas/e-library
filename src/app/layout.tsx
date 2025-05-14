@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import {
   Bungee_Spice,
   IBM_Plex_Mono,
@@ -10,11 +11,6 @@ import {
   Pinyon_Script,
 } from "next/font/google";
 import { Toaster } from "sonner";
-import { createClient } from "@/utils/supabase/server";
-import Navbar from "@/components/content/navbar";
-import LandingPage from "@/components/content/landing-page";
-import { redirect } from "next/navigation";
-import DashboardNavbar from "@/components/content/protected/dashboard-navbar";
 import { AppProvider } from "@/components/providers/user-provider";
 
 export const metadata: Metadata = {
@@ -53,11 +49,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-seba tracking-tighter ">
-        <Toaster richColors position="top-center" />
-        <AppProvider>{children}</AppProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="font-seba tracking-tighter ">
+          <Toaster richColors position="top-center" />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
