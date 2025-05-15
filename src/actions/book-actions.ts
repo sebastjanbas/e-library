@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { booksTable } from "@/db/schema";
 import { setUserSession } from "./book-db";
 import { createClient } from "@/utils/supabase/server";
+import { sql } from "drizzle-orm";
 
 export const saveBook = async (
   values: z.infer<typeof BookSchema>,
@@ -20,7 +21,7 @@ export const saveBook = async (
     return { error: "User not authenticated!" };
   }
 
-  await setUserSession()
+  const user_id = await setUserSession()
 
   // // 1. Find all books with same ISBN and same user
   // const { data: existingBooks, error: bookLookupError } = await supabase
@@ -45,7 +46,7 @@ export const saveBook = async (
 
   //   if (linkError) {
   //     return { error: "Error checking if book already exists in library." };
-  //   }
+  //   
 
   //   if (existingLinks && existingLinks.length > 0) {
   //     return { error: "This book already exists in the selected library." };
@@ -57,7 +58,7 @@ export const saveBook = async (
   }
 
   const bookInfo = {
-    user_id: userId,
+    user_id: user_id,
     title: values.title,
     subtitle: values.subtitle,
     authors: values.authors,
@@ -73,13 +74,17 @@ export const saveBook = async (
     info_link: values.infoUrl,
   };
 
-  const bookResponse = await db.insert(booksTable).values(bookInfo)
-  
-  console.log("Book response: ", bookResponse)
+   const bookResponse = await db.transaction(async (tx) => {
+    await tx.execute(
+      sql.raw(`SET app.current_user_id = '${user_id}'`)
+    );
 
-  // if (insertError || !bookData) {
-  //   return { error: "Failed to save book." };
-  // }
+    return await tx.insert(booksTable).values(bookInfo);
+  });
+  
+  if (bookResponse.rowCount !== 1) {
+    return { error: "Failed to save book." };
+  }
 
   // const libraryResponse = await db.insert(librariesTable).values({
   //   library_id: library,
