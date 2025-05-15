@@ -1,29 +1,18 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-import LoginDialog from "./login-dialog";
-import SignupDialog from "./signup-dialog";
 import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div className="fixed z-50 overflow-hidden pr-5 md:px-10 flex justify-center items-center top-0 inset-0 h-20 w-full border-b border-[1px] bg-background/90">
-      <div className="w-full max-w-6xl flex flex-row justify-between items-center">
-        <div className="w-44 p-0 m-0 h-auto">
-          <Link href={"/"}>
-            <Image
-              src={"/logo.png"}
-              width={512}
-              height={512}
-              alt="Company Logo"
-            />
-          </Link>
-        </div>
-        <div className="flex gap-2">
-          <LoginDialog trigger="Log in" navbar />
-          <div className="h-[30px] w-[1px] bg-foreground/30"></div>
-          <SignupDialog trigger="Sign up" navbar />
-        </div>
+    <div className="fixed z-50 overflow-hidden flex justify-self-center px-10 py-2 justify-between items-center top-5 inset-0 h-fit rounded-full w-full max-w-xl bg-gray-100">
+      <div className="p-0 m-0 h-auto">
+        <Link href={"/"}>
+          <div className="w-8 h-8 bg-gray-600 rounded-md"></div>
+        </Link>
+      </div>
+      <div className="flex gap-8 text-foreground">
+        <span className="text-xs font-medium cursor-pointer">Pricing</span>
+        <span className="text-xs font-medium cursor-pointer">Log in</span>
       </div>
     </div>
   );
