@@ -76,7 +76,7 @@ Book.Title = function BookTitle({
     <h1
       className={cn(
         "w-full text-center md:text-start text-2xl md:text-3xl font-semibold pb-1",
-        className,
+        className
       )}
     >
       <span className="flex flex-col-reverse md:inline-block md:space-x-8 gap-y-5 mr-16">
@@ -197,7 +197,9 @@ Book.Language = function BookLanguage() {
       <div className="flex flex-col gap-0">
         <h2 className="text-sm text-gray-600">Language</h2>
         <p className="font-semibold leading-4">
-          {languageMap[bookInfo.language] ?? bookInfo.language}
+          {bookInfo.language
+            ? languageMap[bookInfo.language]
+            : bookInfo.language}
         </p>
       </div>
     </div>

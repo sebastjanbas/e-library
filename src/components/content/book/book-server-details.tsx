@@ -1,26 +1,25 @@
-import { createClient } from "@/utils/supabase/server";
+import { withUserTransaction } from "@/actions/book-db";
 import BookDetailsClient from "./book-details-client";
+import { booksTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
-  const supabase = await createClient();
+  const book = await withUserTransaction((tx) =>
+    tx.select().from(booksTable).where(eq(booksTable.id, bookId))
+  );
 
-  const { data, error } = await supabase
-    .from("books")
-    .select("*")
-    .eq("id", bookId)
-    .single();
+  // const { data: libData, error: libError } = await supabase
+  //   .from("library_books")
+  //   .select("reading_status, custom_notes, library:libraries(id,name)")
+  //   .eq("book_id", bookId);
 
-  const { data: libData, error: libError } = await supabase
-    .from("library_books")
-    .select("reading_status, custom_notes, library:libraries(id,name)")
-    .eq("book_id", bookId);
-
-  if (error) return <p>Error loading book.</p>;
-  if (libError) return <p>Error loading Library</p>;
+  if (!book) return <p>Error loading book.</p>;
+  // if (libError) return <p>Error loading Library</p>;
 
   return (
     <>
-      <BookDetailsClient book={data} libraries={libData} />
+      <BookDetailsClient book={book[0]} />
+      {/* <BookDetailsClient book={book[0]} libraries={libData} /> */}
     </>
   );
 }

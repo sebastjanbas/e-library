@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { HiOutlineCog } from "react-icons/hi";
 import {
@@ -53,7 +53,11 @@ const EditBookButton = ({ book }: { book: BookType }) => {
           <DropdownMenuTrigger className="cursor-pointer">
             <HiOutlineCog size={24} strokeWidth={1.5} />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" side="bottom" className="rounded-sm">
+          <DropdownMenuContent
+            align="start"
+            side="bottom"
+            className="rounded-sm"
+          >
             <DialogTrigger className="w-full cursor-pointer">
               <DropdownMenuItem className="w-full cursor-pointer rounded-xs text-xs">
                 Edit
@@ -64,7 +68,7 @@ const EditBookButton = ({ book }: { book: BookType }) => {
                 variant="destructive"
                 className="w-full cursor-pointer rounded-xs text-xs"
               >
-               Delete 
+                Delete
               </DropdownMenuItem>
             </AlertDialogTrigger>
           </DropdownMenuContent>
@@ -86,7 +90,7 @@ const EditBookButton = ({ book }: { book: BookType }) => {
             </AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete:{" "}
-              {book.title} by {book.authors.join(", ")}
+              {book.title} by {book.authors?.join(", ")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

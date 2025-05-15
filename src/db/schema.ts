@@ -26,23 +26,22 @@ export const usersTable = pgTable("users", {
 });
 
 export const booksTable = pgTable("books", {
-  id: uuid()
-    .primaryKey()
-    .default(sql`gen_random_uuid()`),
+  id: uuid().primaryKey().default(sql`gen_random_uuid()`),
 
   title: text().notNull(),
-  subtitle: text(),
-  authors: text().array(),
-  publisher: text(),
-  published_date: text(),
-  isbn_10: text(),
-  isbn_13: text(),
-  page_count: integer(),
-  cover_url: text(),
-  categories: text().array(),
-  language: text(),
-  info_link: text(),
-  description: text(),
+
+  subtitle: text().default('Unknown'), // ✅ placeholder
+  authors: text().array().default(sql`ARRAY[]::text[]`), // ✅ empty array
+  publisher: text().default('Unknown'),
+  published_date: text().default('Unknown'),
+  isbn_10: text().default('N/A'),
+  isbn_13: text().default('N/A'),
+  page_count: integer().default(0),
+  cover_url: text().default(''),
+  categories: text().array().default(sql`ARRAY[]::text[]`),
+  language: text().default('Unknown'),
+  info_link: text().default(''),
+  description: text().default('No description available'),
   created_at: timestamp({ withTimezone: true }).defaultNow(),
 
   user_id: uuid()

@@ -26,6 +26,7 @@ const VALID_BOOK_FIELDS = [
   'user_id',
 ] as const;
 
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type ValidBookField = (typeof VALID_BOOK_FIELDS)[number];
 
 export const getBooks = async (fields:ValidBookField[]) => {
@@ -63,4 +64,17 @@ export const setUserSession = async () => {
 
   return user?.id
 
+}
+
+export async function withUserTransaction<T>(
+  fn: (tx: Transaction) => Promise<T>
+): Promise<T> {
+  const userId = await setUserSession();
+
+  return await db.transaction(async (tx) => {
+    await tx.execute(
+      sql.raw(`SET app.current_user_id = '${userId}'`)
+    );
+    return await fn(tx);
+  });
 }
