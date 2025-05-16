@@ -11,8 +11,12 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex gap-8 text-foreground">
-        <span className="text-xs font-medium cursor-pointer">Pricing</span>
-        <span className="text-xs font-medium cursor-pointer">Log in</span>
+        <Link href={"/pricing"}>
+          <span className="text-xs font-medium">Pricing</span>
+        </Link>
+        <Link href={"#"}>
+          <span className="text-xs font-medium">Log in</span>
+        </Link>
       </div>
     </div>
   );
