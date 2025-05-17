@@ -4,14 +4,14 @@ import { BookHoverPopover } from "@/components/content/book-hover-popover";
 
 type ListProp = {
   list:
-  | {
-    id?: string;
-    title: string;
-    description: string;
-    categories: string[];
-    cover_url?: string;
-  }[]
-  | null;
+    | {
+        id?: string;
+        title: string;
+        description: string | null;
+        categories: string[] | null;
+        cover_url?: string | null;
+      }[]
+    | null;
 };
 
 export const formatTitleForPlaceholder = (title: string, maxLines = 3) => {

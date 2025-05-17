@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { saveBook } from "@/actions/book-actions";
 import { redirect } from "next/navigation";
@@ -14,55 +14,58 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Book from "./book-details";
 import LibraryForm from "@/components/hooks/forms/library-form";
+import { getLibraries } from "@/actions/library-actions";
 
-// type LibraryType = {
-//   id: string;
-//   name: string;
-//   user_id: string;
-//   description: string;
-//   created_at: string;
-// };
+type LibraryType = {
+  id: string;
+  name: string;
+  user_id: string;
+  description: string | null;
+  created_at: Date | null;
+};
 
 const ShowBookInfo = ({ book }: any) => {
-  // const [library, setLibrary] = useState<string>("")
+  const [library, setLibrary] = useState<string>("");
   const [open, setOpen] = useState(false);
-  // const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
-  // const [enableSelect, setEnableSelect] = useState(false);
+  const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
+  const [enableSelect, setEnableSelect] = useState(false);
   const [count, setCount] = useState(0);
 
-  // useEffect(() => {
-  //   const fetchLibraries = async () => {
-  //     const supabase = createClient();
-  //     const { data, error } = await supabase.from("libraries").select("*");
+  useEffect(() => {
+    const fetchLibraries = async () => {
+      try {
+        const libraries = await getLibraries();
 
-  //     if (error) {
-  //       toast.error("Something went wrong: " + error.message);
-  //       return;
-  //     }
+        if (libraries) setLibraries(libraries);
+        if (libraries?.length !== 0) {
+          setEnableSelect(true);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(
+          "Something went wrong: " +
+            (error instanceof Error ? error.message : String(error))
+        );
+      }
+    };
 
-  //     setLibraries(data);
-  //     if (data.length !== 0) {
-  //       setEnableSelect(true);
-  //     }
-  //   };
-
-  //   fetchLibraries();
-  // }, [count]);
+    fetchLibraries();
+  }, [count]);
 
   const submitBookInfo = async () => {
-    // if (library === "") {
-    //   toast.error("Must specify the library the book belongs to");
-    //   return;
-    // }
+    if (library === "") {
+      toast.error("Must specify the library the book belongs to");
+      return;
+    }
 
     const {
       title,
@@ -105,7 +108,7 @@ const ShowBookInfo = ({ book }: any) => {
       isbn10,
     };
 
-    const response = await saveBook(BookInfo, "");
+    const response = await saveBook(BookInfo, library);
 
     if (response.error) {
       toast.error(response.error);
@@ -139,7 +142,10 @@ const ShowBookInfo = ({ book }: any) => {
             <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center gap-3 md:gap-10">
               <div>
                 <div className="flex gap-3">
-                  {/* <Select value={library} onValueChange={(val) => setLibrary(val)}>
+                  <Select
+                    value={library}
+                    onValueChange={(val) => setLibrary(val)}
+                  >
                     <SelectTrigger
                       disabled={!enableSelect}
                       className="w-[180px] disabled:cursor-default"
@@ -154,7 +160,7 @@ const ShowBookInfo = ({ book }: any) => {
                           </SelectItem>
                         ))}
                     </SelectContent>
-                  </Select> */}
+                  </Select>
                   <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger>+</DialogTrigger>
                     <DialogContent className="w-full max-w-xl">
@@ -171,11 +177,11 @@ const ShowBookInfo = ({ book }: any) => {
                     </DialogContent>
                   </Dialog>
                 </div>
-                {/* {!enableSelect && (
+                {!enableSelect && (
                   <p className="text-sm italic text-foreground/50">
                     You dont have any libraries yet
                   </p>
-                )} */}
+                )}
               </div>
               <Button className="md:hover:scale-105" onClick={submitBookInfo}>
                 Add Book to Library

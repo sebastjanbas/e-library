@@ -1,11 +1,12 @@
 import { Webhook } from 'svix';
-import { db } from '@/db';
 import { sql } from 'drizzle-orm';
 import { WebhookEvent } from '@clerk/nextjs/server';
+import { getDb } from '@/db';
 
 export async function POST(req: Request) {
   console.log('✅ Clerk webhook received');
 
+  const db = await getDb();
   const payload = await req.text();
   const headers = req.headers;
 

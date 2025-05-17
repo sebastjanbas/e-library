@@ -39,7 +39,7 @@ export const BookSchema = z.object({
 
 export type BookType = {
   id: string,
-  user_id?: string;
+  user_id: string;
   title: string;
   subtitle: string | null;
   authors: string[] | null;

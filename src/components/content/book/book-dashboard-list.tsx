@@ -2,7 +2,8 @@ import React from "react";
 import { BookList } from "../protected/user/dashboard/book-list";
 import { BookCategories } from "@/lib/docs";
 // import { toast } from "sonner";
-import { getBooks } from "@/actions/book-db";
+import { booksTable } from "@/db/schema";
+import { getDb } from "@/db";
 
 const BookDashboardList = async () => {
   // const {
@@ -19,13 +20,16 @@ const BookDashboardList = async () => {
   //   toast.error("Error loading books!");
   // }
 
-  const books = await getBooks([
-    "id",
-    "title",
-    "description",
-    "categories",
-    "cover_url",
-  ]);
+  const db = await getDb();
+  const books = await db
+    .select({
+      id: booksTable.id,
+      title: booksTable.title,
+      description: booksTable.description,
+      categories: booksTable.categories,
+      cover_url: booksTable.cover_url,
+    })
+    .from(booksTable);
 
   if (books.length === 0) return <p>Add your first book to see statistics</p>;
 

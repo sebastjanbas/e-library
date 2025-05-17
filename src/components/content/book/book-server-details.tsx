@@ -1,12 +1,16 @@
-import { withUserTransaction } from "@/actions/book-db";
+"use server";
 import BookDetailsClient from "./book-details-client";
 import { booksTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { getDb } from "@/db";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
-  const book = await withUserTransaction((tx) =>
-    tx.select().from(booksTable).where(eq(booksTable.id, bookId))
-  );
+  const db = await getDb();
+  const book = await db
+    .select()
+    .from(booksTable)
+    .where(eq(booksTable.id, bookId))
+    .limit(1);
 
   // const { data: libData, error: libError } = await supabase
   //   .from("library_books")
