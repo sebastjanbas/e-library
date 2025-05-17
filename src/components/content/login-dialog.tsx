@@ -1,28 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
-import LoginForm from "@/components/auth/login-form";    // your login form
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import LoginForm from "@/components/auth/login-form"; // your login form
 import Image from "next/image";
 import AuthCard from "../auth/auth-card";
 
-const LoginDialog = ({ trigger, navbar }: { trigger: string; navbar?: boolean }) => {
+const LoginDialog = ({
+  trigger,
+  navbar,
+}: {
+  trigger: string;
+  navbar?: boolean;
+}) => {
   const [open, setOpen] = useState(false);
 
   const className = navbar
-    ? "cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform"
+    ? "p-0 cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform text-xs font-medium"
     : "flex-1 text-sm rounded-full bg-primary text-primary-foreground shadow-xs hover:bg-primary/90";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className={className}>
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger className={className}>{trigger}</DialogTrigger>
       <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[75vh] w-full max-w-[1000px]">
         <div className="flex flex-col justify-center items-center gap-6 p-6">
           <DialogHeader className="w-full">
-            <DialogTitle className="w-full text-center capitalize">Welcome back!</DialogTitle>
-            <DialogDescription className="w-full text-center">Login to your account</DialogDescription>
+            <DialogTitle className="w-full text-center capitalize">
+              Welcome back!
+            </DialogTitle>
+            <DialogDescription className="w-full text-center">
+              Login to your account
+            </DialogDescription>
           </DialogHeader>
           <div className="w-full max-w-sm">
             <AuthCard>

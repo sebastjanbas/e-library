@@ -2,6 +2,7 @@ import React from "react";
 // import { Button } from "../ui/button";
 // import SignupDialog from "./signup-dialog";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const HerroSection = () => {
   return (
@@ -34,7 +35,9 @@ const HerroSection = () => {
           <span className="border-blue-400 border-[1px] text-foreground flex justify-between items-center pl-6 pr-3 py-2 gap-5 text-sm rounded-full font-medium">
             See our plans{" "}
             <span className="bg-blue-400 text-white rounded-full p-1">
-              <ArrowRight size="20" />{" "}
+              <Link href="/pricing">
+                <ArrowRight size="20" />{" "}
+              </Link>
             </span>
           </span>
 

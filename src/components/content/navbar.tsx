@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import LoginDialog from "./login-dialog";
 
 const Navbar = () => {
   return (
@@ -10,13 +11,13 @@ const Navbar = () => {
           <div className="w-8 h-8 bg-gray-600 rounded-md"></div>
         </Link>
       </div>
-      <div className="flex gap-8 text-foreground">
-        <Link href={"/pricing"}>
-          <span className="text-xs font-medium">Pricing</span>
+      <div className="flex items-center gap-8 text-foreground">
+        <Link href={"/pricing"} className="flex items-stretch">
+          <span className="p-0 cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform text-xs font-medium">
+            Pricing
+          </span>
         </Link>
-        <Link href={"#"}>
-          <span className="text-xs font-medium">Log in</span>
-        </Link>
+        <LoginDialog trigger="Log in" navbar />
       </div>
     </div>
   );
