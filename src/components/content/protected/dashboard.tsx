@@ -1,4 +1,3 @@
-import { User } from "@supabase/supabase-js";
 import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +11,6 @@ import {
 import Link from "next/link";
 import BookDashboardList from "../book/book-dashboard-list";
 import BookListSkeleton from "../skeletons/book-list-skeleton";
-
-export type UserType = {
-  user: User | null;
-};
 
 const Dashboard = async () => {
   return (
@@ -45,7 +40,7 @@ const Dashboard = async () => {
         </Dialog>
       </div>
       <div className="flex flex-col gap-10 w-full">
-        <Suspense fallback={<BookListSkeleton />} >
+        <Suspense fallback={<BookListSkeleton />}>
           <BookDashboardList />
         </Suspense>
       </div>

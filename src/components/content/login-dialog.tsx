@@ -4,14 +4,11 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import LoginForm from "@/components/auth/login-form"; // your login form
 import Image from "next/image";
-import AuthCard from "../auth/auth-card";
+import { SignIn } from "@clerk/nextjs";
 
 const LoginDialog = ({
   trigger,
@@ -30,21 +27,8 @@ const LoginDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className={className}>{trigger}</DialogTrigger>
       <DialogContent className="grid p-0 md:grid-cols-2 h-fit max-h-[75vh] w-full max-w-[1000px]">
-        <div className="flex flex-col justify-center items-center gap-6 p-6">
-          <DialogHeader className="w-full">
-            <DialogTitle className="w-full text-center capitalize">
-              Welcome back!
-            </DialogTitle>
-            <DialogDescription className="w-full text-center">
-              Login to your account
-            </DialogDescription>
-          </DialogHeader>
-          <div className="w-full max-w-sm">
-            <AuthCard>
-              <LoginForm />
-            </AuthCard>
-          </div>
-        </div>
+        <DialogTitle className="hidden" />
+        <SignIn />
         <div className="hidden md:block w-full h-full overflow-hidden rounded-r-lg">
           <Image
             src="/email-cover.jpg"

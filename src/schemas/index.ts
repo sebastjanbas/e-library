@@ -39,20 +39,20 @@ export const BookSchema = z.object({
 
 export type BookType = {
   id: string,
-  user_id?: string;
+  user_id: string;
   title: string;
-  subtitle: string;
-  authors: string[];
-  publisher: string;
-  description: string;
-  published_date: string;
-  isbn_10: string;
-  isbn_13: string;
-  page_count: number;
-  cover_url?: string;
-  categories: string[];
-  language: string;
-  info_link?: string;
+  subtitle: string | null;
+  authors: string[] | null;
+  publisher: string | null;
+  description: string | null;
+  published_date: string | null;
+  isbn_10: string | null;
+  isbn_13: string | null;
+  page_count: number | null;
+  cover_url?: string | null;
+  categories: string[] | null;
+  language: string | null;
+  info_link?: string | null;
 };
 
 export const ProfileInfoSchema = z.object({

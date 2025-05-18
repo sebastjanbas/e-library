@@ -1,22 +1,32 @@
-import { createClient } from "@/utils/supabase/server";
 import React from "react";
 import { toast } from "sonner";
 import RoomListToggle from "./room-display-toggle";
+import { getDb } from "@/db";
+import { librariesTable } from "@/db/schema";
+import { count } from "drizzle-orm";
 
 const Roomlist = async () => {
-  const supabase = await createClient();
-  const { data, error, count } = await supabase
-    .from("libraries")
-    .select("id, name", { count: "exact" });
+  const db = await getDb();
+  let libraries;
+  let total;
+  try {
+    libraries = await db
+      .select({ id: librariesTable.id, name: librariesTable.name })
+      .from(librariesTable);
 
-  if (error) {
-    toast.error("Error getting rooms: " + error.message);
+    [{ total }] = await db.select({ total: count() }).from(librariesTable);
+  } catch (error) {
+    toast.error(
+      "Error getting rooms: " +
+        (error instanceof Error ? error.message : String(error))
+    );
+    return <p className="text-destructive italic">Error: {String(error)}</p>;
   }
 
   return (
     <>
-      <h2>All items: {count}</h2>
-    <RoomListToggle data={data} />
+      <h2>All items: {total}</h2>
+      <RoomListToggle data={libraries} />
     </>
   );
 };

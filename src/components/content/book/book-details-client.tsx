@@ -14,12 +14,14 @@ import { useRouter } from "next/navigation";
 
 type BookDetailsProps = {
   book: BookType;
-  libraries: any;
+  libraries?: any;
 };
 
 const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
   // FIX: the library situation (and an option to change, and add the library)
-  const status = libraries[0].reading_status as ReadingStatus;
+  const status = libraries
+    ? (libraries[0].reading_status as ReadingStatus)
+    : "not_started";
   const router = useRouter();
   const readingS = [
     { status: "not_started", value: "Start Reading" },
@@ -94,7 +96,7 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
                 libraries.map(
                   (
                     lib: { library: { id: string; name: string } },
-                    i: number,
+                    i: number
                   ) => (
                     <Button
                       onClick={() => {
@@ -105,7 +107,7 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
                     >
                       {lib.library.name}
                     </Button>
-                  ),
+                  )
                 )
               ) : (
                 <p className="text-destructive italic">

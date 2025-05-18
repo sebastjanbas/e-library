@@ -17,8 +17,8 @@ export const BookHoverPopover = ({
   book: {
     id?: string;
     title: string;
-    description: string;
-    cover_url?: string;
+    description: string | null;
+    cover_url?: string | null;
     categories: string[] | null;
   };
 }) => {
@@ -61,7 +61,7 @@ export const BookHoverPopover = ({
               src={
                 book.cover_url ??
                 `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
-                  book.title,
+                  book.title
                 )}&font=playfair-display&fontsize=24`
               }
               width={400}
@@ -86,7 +86,7 @@ export const BookHoverPopover = ({
             src={
               book.cover_url ??
               `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
-                book.title,
+                book.title
               )}&font=playfair-display&fontsize=24`
             }
             width={400}

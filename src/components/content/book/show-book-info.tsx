@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { saveBook } from "@/actions/book-actions";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
-import { createClient } from "@/utils/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -24,17 +23,18 @@ import {
 } from "@/components/ui/select";
 import Book from "./book-details";
 import LibraryForm from "@/components/hooks/forms/library-form";
+import { getLibraries } from "@/actions/library-actions";
 
 type LibraryType = {
   id: string;
   name: string;
   user_id: string;
-  description: string;
-  created_at: string;
+  description: string | null;
+  created_at: Date | null;
 };
 
 const ShowBookInfo = ({ book }: any) => {
-  const [library, setLibrary] = useState<string>("")
+  const [library, setLibrary] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [libraries, setLibraries] = useState<LibraryType[] | null>(null);
   const [enableSelect, setEnableSelect] = useState(false);
@@ -42,17 +42,19 @@ const ShowBookInfo = ({ book }: any) => {
 
   useEffect(() => {
     const fetchLibraries = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase.from("libraries").select("*");
+      try {
+        const libraries = await getLibraries();
 
-      if (error) {
-        toast.error("Something went wrong: " + error.message);
-        return;
-      }
-
-      setLibraries(data);
-      if (data.length !== 0) {
-        setEnableSelect(true);
+        if (libraries) setLibraries(libraries);
+        if (libraries?.length !== 0) {
+          setEnableSelect(true);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(
+          "Something went wrong: " +
+            (error instanceof Error ? error.message : String(error))
+        );
       }
     };
 
@@ -60,10 +62,9 @@ const ShowBookInfo = ({ book }: any) => {
   }, [count]);
 
   const submitBookInfo = async () => {
-
-    if (library === ""){
-      toast.error("Must specify the library the book belongs to")
-      return
+    if (library === "") {
+      toast.error("Must specify the library the book belongs to");
+      return;
     }
 
     const {
@@ -141,7 +142,10 @@ const ShowBookInfo = ({ book }: any) => {
             <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center gap-3 md:gap-10">
               <div>
                 <div className="flex gap-3">
-                  <Select value={library} onValueChange={(val) => setLibrary(val)}>
+                  <Select
+                    value={library}
+                    onValueChange={(val) => setLibrary(val)}
+                  >
                     <SelectTrigger
                       disabled={!enableSelect}
                       className="w-[180px] disabled:cursor-default"

@@ -1,6 +1,4 @@
 import React from "react";
-// import { Button } from "../ui/button";
-// import SignupDialog from "./signup-dialog";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -40,11 +38,6 @@ const HerroSection = () => {
               </Link>
             </span>
           </span>
-
-          {/* <SignupDialog trigger="Scan your first book" />
-          <Button className="rounded-full cursor-pointer flex-1">
-            Learn More
-          </Button> */}
         </div>
       </div>
     </section>

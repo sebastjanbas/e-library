@@ -1,59 +1,78 @@
 "use server";
 import { z } from "zod";
 import { BookSchema, LibraryType } from "@/schemas";
-import { createClient } from "@/utils/supabase/server";
+import { getDb } from "@/db";
+import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
+import { auth } from "@clerk/nextjs/server";
+import { and, eq, inArray, or } from "drizzle-orm";
 
 export const saveBook = async (
   values: z.infer<typeof BookSchema>,
-  library: string,
+  library: string
 ) => {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  const { userId } = await auth();
+  if (!userId) {
     return { error: "User not authenticated!" };
   }
+  const db = await getDb();
 
-  // 1. Find all books with same ISBN and same user
-  const { data: existingBooks, error: bookLookupError } = await supabase
-    .from("books")
-    .select("id")
-    .or(`isbn_13.eq.${values.isbn13},isbn_10.eq.${values.isbn10}`)
-    .eq("user_id", user?.id);
-
-  if (bookLookupError) {
-    return { error: "Error checking for existing book." };
+  // 1. Find existing books with matching ISBN and same user
+  let existingBooks = [];
+  try {
+    existingBooks = await db
+      .select({ id: booksTable.id })
+      .from(booksTable)
+      .where(
+        and(
+          or(
+            eq(booksTable.isbn_13, values.isbn13),
+            eq(booksTable.isbn_10, values.isbn10)
+          ),
+          eq(booksTable.user_id, userId)
+        )
+      );
+  } catch (error) {
+    return {
+      error:
+        "Error checking for existing book: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
 
-  // 2. If any book exists, check if any of them are already linked to the given library
-  if (existingBooks && existingBooks.length > 0) {
+  // 2. Check if any are already linked to the given library
+  if (existingBooks.length > 0) {
     const existingBookIds = existingBooks.map((book) => book.id);
 
-    const { data: existingLinks, error: linkError } = await supabase
-      .from("library_books")
-      .select("id")
-      .in("book_id", existingBookIds)
-      .eq("library_id", library);
+    try {
+      const existingLinks = await db
+        .select({ id: libraryBooksTable.id })
+        .from(libraryBooksTable)
+        .where(
+          and(
+            inArray(libraryBooksTable.book_id, existingBookIds),
+            eq(libraryBooksTable.library_id, library)
+          )
+        );
 
-    if (linkError) {
-      return { error: "Error checking if book already exists in library." };
-    }
-
-    if (existingLinks && existingLinks.length > 0) {
-      return { error: "This book already exists in the selected library." };
+      if (existingLinks.length > 0) {
+        return { error: "This book already exists in the selected library." };
+      }
+    } catch (error) {
+      return {
+        error:
+          "Error checking if book already exists in library: " +
+          (error instanceof Error ? error.message : String(error)),
+      };
     }
   }
 
+  // 3. Insert new book
   if (values.thumbnailUrl) {
     values.thumbnailUrl = `https://images-na.ssl-images-amazon.com/images/P/${values.isbn10}.01._SX360_SCLZZZZZZZ_.jpg`;
   }
 
   const bookInfo = {
-    user_id: user?.id,
+    user_id: userId,
     title: values.title,
     subtitle: values.subtitle,
     authors: values.authors,
@@ -69,24 +88,34 @@ export const saveBook = async (
     info_link: values.infoUrl,
   };
 
-  const { data: bookData, error: insertError } = await supabase
-    .from("books")
-    .insert(bookInfo)
-    .select("id")
-    .single();
-
-  if (insertError || !bookData) {
-    return { error: "Failed to save book." };
+  let insertedBook;
+  try {
+    const result = await db
+      .insert(booksTable)
+      .values(bookInfo)
+      .returning({ id: booksTable.id });
+    insertedBook = result[0];
+  } catch (error) {
+    return {
+      error:
+        "Failed to save book: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
 
-  const { error: libraryError } = await supabase.from("library_books").insert({
-    library_id: library,
-    book_id: bookData.id,
-    reading_status: "not_started",
-  });
-
-  if (libraryError) {
-    return { error: "Something went wrong!" + libraryError.message };
+  // 4. Link to library
+  try {
+    await db.insert(libraryBooksTable).values({
+      library_id: library,
+      book_id: insertedBook.id,
+      reading_status: "not_started",
+    });
+  } catch (error) {
+    return {
+      error:
+        "Error linking book to library: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
 
   return { success: "Successfully saved!" };
@@ -94,10 +123,9 @@ export const saveBook = async (
 
 export const updateBookInfo = async (
   values: z.infer<typeof BookSchema>,
-  id: string,
+  id: string
 ) => {
-  const supabase = await createClient();
-
+  const db = await getDb();
   const updatedData = {
     title: values.title ?? "",
     subtitle: values.subtitle ?? "",
@@ -114,56 +142,69 @@ export const updateBookInfo = async (
     info_link: values.infoUrl ?? null,
   };
 
-  const { error } = await supabase
-    .from("books")
-    .update(updatedData)
-    .eq("id", id);
+  try {
+    await db.update(booksTable).set(updatedData).where(eq(booksTable.id, id));
 
-  if (error) {
-    return { error: "Something went wrong: " + error.message };
+    return { success: "Book updated successfully!" };
+  } catch (error) {
+    return {
+      error:
+        "Something went wrong: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
-  return { success: "Book updated successfully!" };
 };
 
 export const removeBook = async (id: string) => {
-  const supabase = await createClient();
-  const response = await supabase.from("books").delete().eq("id", id);
+  const db = await getDb();
+  try {
+    await db.delete(booksTable).where(eq(booksTable.id, id));
 
-  if (response.status !== 204) {
-    return { error: "Something went wrong: " + response.statusText };
-  } else {
     return { success: "Book successfully deleted!" };
+  } catch (error) {
+    return {
+      error:
+        "Something went wrong: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
 };
 
 export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { userId } = await auth();
+  if (!userId) {
+    return { error: "User not authenticated!" };
+  }
+
+  const db = await getDb();
 
   const libraryData = {
-    user_id: user?.id,
+    user_id: userId,
     name: values.name,
     description: values.description,
   };
-  const { error } = await supabase.from("libraries").insert(libraryData);
 
-  if (error) {
-    return { error: "Error creating a library: " + error.message };
+  try {
+    await db.insert(librariesTable).values(libraryData);
+    return { success: "Library created successfully!" };
+  } catch (error) {
+    return {
+      error:
+        "Error creating a library: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
-  return { success: "Library created successfully!" };
 };
 
 export const updateReadingStatus = async (status: string, id: string) => {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("library_books")
-    .update({ reading_status: status })
-    .eq("book_id", id);
-  console.log(error)
-  if (error) {
+  const db = await getDb();
+  try {
+    await db
+      .update(libraryBooksTable)
+      .set({ reading_status: status as "not_started" | "reading" | "finished"})
+      .where(eq(libraryBooksTable.book_id, id));
+  } catch (error) {
+    console.error(error);
     return { error: "Error updating reading status" };
   }
-  return;
 };

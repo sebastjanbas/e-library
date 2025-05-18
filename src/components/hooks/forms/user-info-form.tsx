@@ -17,9 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProfileInfoSchema } from "@/schemas";
-import { updateUserInfo } from "@/actions/update-user";
+// import { updateUserInfo } from "@/actions/update-user";
 import { toast } from "sonner";
-import { useUser } from "@/store/useUser";
+import { useUser } from "@clerk/nextjs";
 
 const UserInfoForm = () => {
   const { user } = useUser();
@@ -29,28 +29,26 @@ const UserInfoForm = () => {
   const form = useForm({
     resolver: zodResolver(ProfileInfoSchema),
     defaultValues: {
-      firstName:
-        user?.user_metadata.first_name ??
-        user?.user_metadata.full_name.split(" ")[0],
-      lastName:
-        user?.user_metadata.last_name ??
-        user?.user_metadata.full_name.split(" ")[1],
-      email: user?.email ?? "",
+      firstName: user?.firstName ? user.firstName : "",
+      lastName: user?.lastName ? user.lastName : "",
+      email: user?.primaryEmailAddress?.emailAddress ?? "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof ProfileInfoSchema>) => {
     setLoading(true);
-    const response = await updateUserInfo(values);
-    if (response.error) {
-      toast.error(response.error);
-      return;
-    }
+    console.log(values);
+    toast.warning("User setting changes are currently unavailable");
+    // const response = await updateUserInfo(values);
+    // if (response.error) {
+    //   toast.error(response.error);
+    //   return;
+    // }
 
-    if (response.success) {
-      toast.success(response.success);
-      window.location.href = "/account/profile"; // reload the page for client components
-    }
+    // if (response.success) {
+    //   toast.success(response.success);
+    //   window.location.href = "/account/profile"; // reload the page for client components
+    // }
 
     setLoading(false);
   };
@@ -69,7 +67,7 @@ const UserInfoForm = () => {
               <FormItem className="flex-1">
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder="Darius" {...field} />
+                  <Input disabled={true} placeholder="Darius" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,7 +80,7 @@ const UserInfoForm = () => {
               <FormItem className="flex-1">
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder="Smith" {...field} />
+                  <Input disabled={true} placeholder="Smith" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
