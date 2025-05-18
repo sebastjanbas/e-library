@@ -11,7 +11,6 @@ import {
   Pinyon_Script,
 } from "next/font/google";
 import { Toaster } from "sonner";
-import { AppProvider } from "@/components/providers/user-provider";
 
 export const metadata: Metadata = {
   title: "E-Library",

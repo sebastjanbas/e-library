@@ -92,7 +92,7 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
               {reading}
             </Button>
             <div>
-              {/* {libraries.length > 0 ? (
+              {libraries.length > 0 ? (
                 libraries.map(
                   (
                     lib: { library: { id: string; name: string } },
@@ -113,7 +113,7 @@ const BookDetailsClient = ({ book, libraries }: BookDetailsProps) => {
                 <p className="text-destructive italic">
                   Book not linked to library
                 </p>
-              )} */}
+              )}
             </div>
           </div>
         </div>

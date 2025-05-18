@@ -3,7 +3,6 @@ import { z } from "zod";
 import { BookSchema, LibraryType } from "@/schemas";
 import { getDb } from "@/db";
 import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
-import { createClient } from "@/utils/supabase/server";
 import { auth } from "@clerk/nextjs/server";
 import { and, eq, inArray, or } from "drizzle-orm";
 
@@ -126,8 +125,7 @@ export const updateBookInfo = async (
   values: z.infer<typeof BookSchema>,
   id: string
 ) => {
-  const supabase = await createClient();
-
+  const db = await getDb();
   const updatedData = {
     title: values.title ?? "",
     subtitle: values.subtitle ?? "",
@@ -144,25 +142,31 @@ export const updateBookInfo = async (
     info_link: values.infoUrl ?? null,
   };
 
-  const { error } = await supabase
-    .from("books")
-    .update(updatedData)
-    .eq("id", id);
+  try {
+    await db.update(booksTable).set(updatedData).where(eq(booksTable.id, id));
 
-  if (error) {
-    return { error: "Something went wrong: " + error.message };
+    return { success: "Book updated successfully!" };
+  } catch (error) {
+    return {
+      error:
+        "Something went wrong: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
-  return { success: "Book updated successfully!" };
 };
 
 export const removeBook = async (id: string) => {
-  const supabase = await createClient();
-  const response = await supabase.from("books").delete().eq("id", id);
+  const db = await getDb();
+  try {
+    await db.delete(booksTable).where(eq(booksTable.id, id));
 
-  if (response.status !== 204) {
-    return { error: "Something went wrong: " + response.statusText };
-  } else {
     return { success: "Book successfully deleted!" };
+  } catch (error) {
+    return {
+      error:
+        "Something went wrong: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
   }
 };
 
@@ -193,14 +197,14 @@ export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
 };
 
 export const updateReadingStatus = async (status: string, id: string) => {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("library_books")
-    .update({ reading_status: status })
-    .eq("book_id", id);
-  console.log(error);
-  if (error) {
+  const db = await getDb();
+  try {
+    await db
+      .update(libraryBooksTable)
+      .set({ reading_status: status as "not_started" | "reading" | "finished"})
+      .where(eq(libraryBooksTable.book_id, id));
+  } catch (error) {
+    console.error(error);
     return { error: "Error updating reading status" };
   }
-  return;
 };

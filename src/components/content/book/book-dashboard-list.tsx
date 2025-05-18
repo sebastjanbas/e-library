@@ -1,35 +1,30 @@
 import React from "react";
 import { BookList } from "../protected/user/dashboard/book-list";
 import { BookCategories } from "@/lib/docs";
-// import { toast } from "sonner";
 import { booksTable } from "@/db/schema";
 import { getDb } from "@/db";
+import { toast } from "sonner";
 
 const BookDashboardList = async () => {
-  // const {
-  //   data: allBooks,
-  //   count,
-  //   error,
-  // } = await supabase
-  //   .from("books")
-  //   .select("id, title, description, categories, cover_url", {
-  //     count: "exact",
-  //   });
-
-  // if (error) {
-  //   toast.error("Error loading books!");
-  // }
-
   const db = await getDb();
-  const books = await db
-    .select({
-      id: booksTable.id,
-      title: booksTable.title,
-      description: booksTable.description,
-      categories: booksTable.categories,
-      cover_url: booksTable.cover_url,
-    })
-    .from(booksTable);
+  let books;
+  try {
+    books = await db
+      .select({
+        id: booksTable.id,
+        title: booksTable.title,
+        description: booksTable.description,
+        categories: booksTable.categories,
+        cover_url: booksTable.cover_url,
+      })
+      .from(booksTable);
+  } catch (error) {
+    toast.error(
+      "Error loading books: " +
+        (error instanceof Error ? error.message : String(error))
+    );
+    return <p className="text-destructive italic">Something went wrong</p>;
+  }
 
   if (books.length === 0) return <p>Add your first book to see statistics</p>;
 

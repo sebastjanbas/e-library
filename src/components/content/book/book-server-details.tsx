@@ -1,29 +1,47 @@
 "use server";
 import BookDetailsClient from "./book-details-client";
-import { booksTable } from "@/db/schema";
+import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
   const db = await getDb();
-  const book = await db
-    .select()
-    .from(booksTable)
-    .where(eq(booksTable.id, bookId))
-    .limit(1);
+  let book;
+  try {
+    book = await db
+      .select()
+      .from(booksTable)
+      .where(eq(booksTable.id, bookId))
+      .limit(1);
+  } catch (error) {
+    console.error(error);
+    return <p className="text-destructive italic">Error loading book.</p>;
+  }
 
-  // const { data: libData, error: libError } = await supabase
-  //   .from("library_books")
-  //   .select("reading_status, custom_notes, library:libraries(id,name)")
-  //   .eq("book_id", bookId);
-
-  if (!book) return <p>Error loading book.</p>;
-  // if (libError) return <p>Error loading Library</p>;
-
+  let libraries;
+  try {
+    libraries = await db
+      .select({
+        reading_status: libraryBooksTable.reading_status,
+        notes: libraryBooksTable.notes,
+        library: {
+          id: librariesTable.id,
+          name: librariesTable.name,
+        },
+      })
+      .from(libraryBooksTable)
+      .innerJoin(
+        librariesTable,
+        eq(libraryBooksTable.library_id, librariesTable.id)
+      )
+      .where(eq(libraryBooksTable.book_id, bookId));
+  } catch (error) {
+    console.error(error);
+    return <p className="text-destructive italic">Error loading books.</p>;
+  }
   return (
     <>
-      <BookDetailsClient book={book[0]} />
-      {/* <BookDetailsClient book={book[0]} libraries={libData} /> */}
+      <BookDetailsClient book={book[0]} libraries={libraries} />
     </>
   );
 }

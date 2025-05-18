@@ -1,32 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient } from "@/utils/supabase/server";
 import React from "react";
 import { toast } from "sonner";
 import LibraryInfoTable from "./library-info-table";
+import { getDb } from "@/db";
+import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 const LibraryInfo = async ({ libId }: any) => {
-  const supabase = await createClient(); // 1. Get the single library info
-  const { data: library, error: libraryError } = await supabase
-    .from("libraries")
-    .select("name, description")
-    .eq("id", libId)
-    .single(); // <- get only one library
+  const db = await getDb();
+  let library;
+  try {
+    library = await db
+      .select({
+        name: librariesTable.name,
+        description: librariesTable.description,
+      })
+      .from(librariesTable)
+      .where(eq(librariesTable.id, libId))
+      .limit(1);
+  } catch (error) {
+    toast.error("Something went wrong");
+    return <p className="text-destructive italic">Error: {String(error)}</p>;
+  }
 
   // 2. Get all books inside that library
-  const { data: libraryBooks, error: booksError } = await supabase
-    .from("library_books")
-    .select("reading_status, book:books(id, title, authors, published_date)") // join the books table
-    .eq("library_id", libId);
-
-  if (libraryError || booksError) {
+  let books;
+  try {
+    books = await db
+      .select({
+        reading_status: libraryBooksTable.reading_status,
+        book: {
+          id: booksTable.id,
+          title: booksTable.title,
+          authors: booksTable.authors,
+          published_date: booksTable.published_date,
+        },
+      })
+      .from(libraryBooksTable)
+      .innerJoin(booksTable, eq(libraryBooksTable.book_id, booksTable.id))
+      .where(eq(libraryBooksTable.library_id, libId));
+  } catch (error) {
     toast.error("Something went wrong!");
+    return <p className="text-destructive italic">Error: {String(error)}</p>;
   }
 
   return (
     <>
-      <p className="text-8xl font-semibold pb-2">{library?.name}</p>
-      <p className="italic pb-10">{library?.description}</p>
-      <LibraryInfoTable libraryBooks={libraryBooks} />
+      <p className="text-8xl font-semibold pb-2">{library[0]?.name}</p>
+      <p className="italic pb-10">{library[0]?.description}</p>
+      <LibraryInfoTable libraryBooks={books} />
     </>
   );
 };
