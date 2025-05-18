@@ -1,110 +1,23 @@
+import PlanOption from "@/components/content/plan-option";
+import { Button } from "@/components/ui/button";
 import {
-  CalendarCheck,
   Check,
-  Database,
-  Focus,
   Info,
-  MonitorSmartphone,
-  NotebookPen,
-  Users,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const PricingPage = () => {
   return (
-    <div className="mt-40 p-5">
+    <div className="mt-24 sm:p-10 p-5">
       <div className="flex flex-col gap-4 text-center justify-center items-center">
-        <h1 className="text-5xl font-semibold">Unlock Limitlessness</h1>
-        <h3 className="font-semibold text-sm">
-          Get full feature rich experience and unlimited collection
+        <h1 className="text-6xl font-semibold">Unlock Limitlessness</h1>
+        <h3 className="font-normal tracking-wide text-foreground/50 text-xl">
+          Get full feature rich experience and unlimited collection.
         </h3>
-        <div className="flex flex-row gap-1 bg-neutral-100 w-fit p-1 rounded-full cursor-pointer">
-          <span className="text-foreground bg-background rounded-full px-5 py-2 text-xs font-semibold">
-            Yearly
-          </span>
-          <span className="text-foreground/50 bg-transparent rounded-full px-5 py-2 text-xs font-semibold">
-            Monthly
-          </span>
-        </div>
-        <p className="text-xs font-medium tracking-wide">
-          <strong className="text-blue-400 font-medium">Save 40%</strong> on
-          yearly subscription
-        </p>
-        <div className="flex flex-row justify-center items-stretch gap-5 w-full max-w-3xl mt-7">
-          <div className="flex flex-1/2 text-start flex-col border-gray-200 rounded-2xl border-[1px] bg-background p-5 gap-8">
-            <div className="flex flex-col gap-3">
-              <h4 className="text-md font-semibold">Free</h4>
-              <div className="inline-flex items-end gap-2">
-                <h1 className="text-5xl font-black">$0</h1>
-                <p className="text-xs text-foreground/60 tracking-wider -translate-y-2 leading-3">
-                  Per month
-                  <br /> billed yearly
-                </p>
-              </div>
-            </div>
-            <span className="self-center w-full text-sm font-semibold py-2 text-center border-gray-200 border-[1px] rounded-full cursor-pointer">
-              Get started
-            </span>
-            <div>
-              <ul className="flex flex-col gap-2 text-sm font-semibold tracking-tight">
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <Database size={20} /> 50 book limit
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <CalendarCheck size={20} /> Track reading progress
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <NotebookPen size={20} /> Unlimited notes
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <Focus size={20} /> Effortless book capture
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <MonitorSmartphone size={20} /> Sync data multiple devices
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="flex flex-1/2 text-start flex-col rounded-2xl bg-neutral-100 p-5 gap-8">
-            <div className="flex flex-col gap-3">
-              <h4 className="text-md font-semibold">Pro</h4>
-              <div className="inline-flex items-end gap-2">
-                <h1 className="text-5xl font-black">$3</h1>
-                <p className="text-xs text-foreground/60 tracking-wider -translate-y-2 leading-3">
-                  Per month
-                  <br /> billed yearly
-                </p>
-              </div>
-            </div>
-            <span className="self-center w-full text-sm font-semibold py-2 text-center bg-foreground text-white rounded-full cursor-pointer">
-              Get started
-            </span>
-            <div>
-              <ul className="flex flex-col gap-2 text-sm font-semibold tracking-tight">
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <Database size={20} /> Unlimited books
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <CalendarCheck size={20} /> Track reading progress
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <NotebookPen size={20} /> Unlimited notes
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <Focus size={20} /> Effortless book capture
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <MonitorSmartphone size={20} /> Sync data multiple devices
-                </li>
-                <li className="text-foreground/50 inline-flex items-center gap-2">
-                  <Users size={20} /> Share progress and books with friends
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
+      <PlanOption />
       <div className="flex justify-center mt-44">
         <table className="table-fixed w-full max-w-7xl border-collapse">
           <colgroup>
@@ -121,10 +34,14 @@ const PricingPage = () => {
               <th className="text-left px-4 py-2">
                 <div className="flex flex-col items-start gap-1">
                   <span className="font-semibold">Free</span>
-                  <span className="text-xl font-bold">$0</span>
-                  <button className="mt-2 border px-3 py-1 rounded-full text-sm">
-                    Get started
-                  </button>
+                  <span className="text-xl font-bold">$0 <span className="text-sm font-normal">per month</span></span>
+                  <Button
+                    asChild
+                    variant={"blank"}
+                    className="mt-5 border-[1px] hover:bg-foreground/5 font-semibold tracking-wide px-3 py-1 rounded-full text-sm"
+                  >
+                    <Link href={"/sign-in"}>Get started</Link>
+                  </Button>
                 </div>
               </th>
               <th className="text-left px-4 py-2 rounded-t-2xl">
@@ -133,9 +50,13 @@ const PricingPage = () => {
                   <span className="text-xl font-bold">
                     $3 <span className="text-sm font-normal">per month</span>
                   </span>
-                  <button className="mt-2 bg-black text-white px-3 py-1 rounded-full text-sm">
-                    Get started
-                  </button>
+                  <Button
+                    variant={"blank"}
+                    asChild
+                    className="mt-5 bg-foreground text-white font-semibold tracking-wide hover:bg-foreground/90 px-3 py-1 rounded-full text-sm"
+                  >
+                    <Link href={"/sign-in"}>Get started</Link>
+                  </Button>
                 </div>
               </th>
             </tr>

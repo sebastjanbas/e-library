@@ -1,11 +1,36 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import LoginDialog from "./login-dialog";
+import {
+  easeInOut,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "motion/react";
 
 const Navbar = () => {
+  const { scrollY } = useScroll();
+  const [navHidden, setNavHidden] = useState<boolean>(false);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() || 0;
+    if (previous < latest && latest > 200) {
+      setNavHidden(true);
+    } else {
+      setNavHidden(false);
+    }
+  });
+
   return (
-    <div className="fixed z-50 overflow-hidden flex justify-self-center px-10 py-2 justify-between items-center top-5 inset-0 h-fit rounded-full w-full max-w-xl bg-gray-100">
+    <motion.nav
+      variants={{
+        visible: { y: 0 },
+        hidden: { y: "-200%" },
+      }}
+      animate={navHidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: easeInOut }}
+      className="fixed z-50 overflow-hidden flex left-1/2 -translate-x-1/2 px-6 py-3 justify-between items-center top-5 inset-0 h-fit rounded-full w-[90%] md:w-full md:max-w-2xl bg-neutral-100/80 backdrop-blur-lg"
+    >
       <div className="p-0 m-0 h-auto">
         <Link href={"/"}>
           <div className="w-8 h-8 bg-gray-600 rounded-md"></div>
@@ -13,13 +38,13 @@ const Navbar = () => {
       </div>
       <div className="flex items-center gap-8 text-foreground">
         <Link href={"/pricing"} className="flex items-stretch">
-          <span className="p-0 cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform text-xs font-medium">
-            Pricing
-          </span>
+          <span className="text-base tracking-wide font-semibold">Pricing</span>
         </Link>
-        <LoginDialog trigger="Log in" navbar />
+        <Link href={"/sign-in"} className="flex items-stretch">
+          <span className="text-base tracking-wide font-semibold">Log in</span>
+        </Link>
       </div>
-    </div>
+    </motion.nav>
   );
 };
 
