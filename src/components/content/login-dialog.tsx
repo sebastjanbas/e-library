@@ -20,7 +20,7 @@ const LoginDialog = ({
   const [open, setOpen] = useState(false);
 
   const className = navbar
-    ? "cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform"
+    ? "p-0 cursor-pointer text-foreground after:bg-foreground md:after:block md:after:h-[1px] md:after:origin-left md:after:scale-x-0 md:after:transition-transform md:after:duration-300 md:hover:after:scale-x-100 transition-all will-change-transform text-xs font-medium"
     : "flex-1 text-sm rounded-full bg-primary text-primary-foreground shadow-xs hover:bg-primary/90";
 
   return (
