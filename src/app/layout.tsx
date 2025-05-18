@@ -57,7 +57,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="font-seba tracking-tighter ">
+        <body className={`${manrope.variable} antialiased `}>
           <Toaster richColors position="top-center" />
           {children}
         </body>
