@@ -25,8 +25,9 @@ export default function Page() {
           }}
         />
       </div>
-      <div className="flex flex-1/2">
+      <div className="hidden md:flex h-full flex-1/2">
         <Image
+          className="object-cover"
           src={
             "https://placehold.co/1280x1920/EEE/31343C/png/?text=Placeholder&font=nato-sans"
           }
