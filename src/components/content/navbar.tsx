@@ -7,6 +7,7 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "motion/react";
+import Image from "next/image";
 
 const Navbar = () => {
   const { scrollY } = useScroll();
@@ -33,7 +34,7 @@ const Navbar = () => {
     >
       <div className="p-0 m-0 h-auto">
         <Link href={"/"}>
-          <div className="w-8 h-8 bg-gray-600 rounded-md"></div>
+          <Image src={"/logo.svg"} height={32} width={32} alt="Company logo" />
         </Link>
       </div>
       <div className="flex items-center gap-8 text-foreground">

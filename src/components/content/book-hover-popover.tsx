@@ -44,6 +44,13 @@ export const BookHoverPopover = ({
     }
     setOpen(false);
   };
+  const coverUrl = book.cover_url ?? "";
+  const src =
+    coverUrl === ""
+      ? `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
+          book.title,
+        )}&font=playfair-display&fontsize=24`
+      : coverUrl;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -58,12 +65,7 @@ export const BookHoverPopover = ({
         >
           <Link href={`/book-info/${book.id}`}>
             <Image
-              src={
-                book.cover_url ??
-                `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
-                  book.title
-                )}&font=playfair-display&fontsize=24`
-              }
+              src={src}
               width={400}
               height={600}
               alt={book.title}
@@ -83,12 +85,7 @@ export const BookHoverPopover = ({
           className="w-[300px] p-4 bg-background shadow-xl rounded-xl transition-all duration-200"
         >
           <Image
-            src={
-              book.cover_url ??
-              `https://placehold.co/1280x1920/EEE/31343C/png/?text=${formatTitleForPlaceholder(
-                book.title
-              )}&font=playfair-display&fontsize=24`
-            }
+            src={src}
             width={400}
             height={600}
             alt={book.title}

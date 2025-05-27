@@ -18,7 +18,6 @@ import {
   User as UserLogo,
   Users,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 
 const DashboardNavbar = () => {
@@ -26,19 +25,17 @@ const DashboardNavbar = () => {
 
   return (
     <div className="fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 max-w-5xl left-[50%] -translate-x-[50%] flex flex-row justify-between items-center w-full px-6 py-3">
-      <div className="w-44 p-0 m-0 h-auto">
-        <Link href={"/"}>
-          <Image
-            src={"/logo.png"}
-            width={512}
-            height={512}
-            alt="Company Logo"
-          />
+      <div className="flex gap-8 flex-row items-center justify-evenly font-medium tracking-wide">
+        <Link href={"/"} className="text-foreground hover:text-foreground/20">
+          <Image src={"/logo.svg"} width={32} height={32} alt="Company Logo" />
         </Link>
+        <Link href={"/"} className="text-foreground hover:text-foreground/60">Home</Link>
+        <Link href={"/rooms"} className="text-foreground hover:text-foreground/60">Libraries</Link>
+        <Link href={"/books"} className="text-foreground hover:text-foreground/60">Books</Link>
+        <Link href={"#"} className="text-foreground hover:text-foreground/60">Goals</Link>
+        <Link href={"#"} className="text-foreground hover:text-foreground/60">Notes</Link>
+        <Link href={"#"} className="text-foreground hover:text-foreground/60">Achievements</Link>
       </div>
-      <Button asChild variant={"link"}>
-        <Link href={"/rooms"}>Rooms</Link>
-      </Button>
       <div className="flex flex-row gap-2 items-center justify-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
