@@ -22,7 +22,7 @@ const BookListClient = ({ books }: BookListProps) => {
   const router = useRouter();
   // const [searchQuery, setSearchQuery] = useState("");
   //
-  // const booksForSearch = books 
+  // const booksForSearch = books
   //   ?.sort((a: any, b: any) => a.book.title.localeCompare(b.book.title))
   //   .map((item: any) => ({
   //     ...item.book,
@@ -39,19 +39,21 @@ const BookListClient = ({ books }: BookListProps) => {
   //   : (booksForSearch ?? []);
 
   return (
-    <ul className="flex flex-col gap-5">
+    <ul className="flex flex-col lg:grid lg:grid-cols-2 gap-5">
       {books.map((book, i) => (
         <li
           key={i}
           onClick={() => router.push(`/book-info/${book.book.id}`)}
-          className="bg-background rounded-2xl p-4 flex flex-row justify-between cursor-pointer"
+          className="bg-background rounded-2xl p-4 flex flex-col sm:flex-row gap-y-2 justify-between cursor-pointer"
           style={{ boxShadow: "0px 8px 20px 3px rgba(0, 0, 0, 0.20)" }}
         >
-          <div className="flex flex-row gap-3">
-            <BookImageBackground
-              image={book.book.image}
-              title={book.book.title}
-            />
+          <div className="flex flex-row gap-3 items-start">
+            <div className="w-[90px]">
+              <BookImageBackground
+                image={book.book.image}
+                title={book.book.title}
+              />
+            </div>
             <div className="flex flex-col">
               <h3 className="text-xl font-medium tracking-wide">
                 {book.book.title}
@@ -62,8 +64,8 @@ const BookListClient = ({ books }: BookListProps) => {
               <span className="text-xl">50%</span>
             </div>
           </div>
-          <div className="flex flex-row items-center gap-5">
-            <Badge className="w-fit h-fit flex" variant={book.reading_status}>
+          <div className="flex flex-row justify-between items-center gap-5">
+            <Badge className="w-[85px] h-fit flex" variant={book.reading_status}>
               {badgeStatus[book.reading_status ?? "not_started"]}
             </Badge>
             <span className="cursor-pointer">
