@@ -4,7 +4,6 @@ import React, { Suspense } from "react";
 import { BookServerDetails } from "@/components/content/book/book-server-details";
 import { BookDetailsSkeleton } from "@/components/content/book/book-details-skeleton";
 import RecomendationsList from "@/components/content/book/recomendations-list";
-import BookListSkeleton from "@/components/content/skeletons/book-list-skeleton";
 
 const BookDetailsPage = ({ params }: any) => {
   return (
@@ -12,9 +11,7 @@ const BookDetailsPage = ({ params }: any) => {
       <Suspense fallback={<BookDetailsSkeleton />}>
         <BookServerDetails bookId={params.bookId} />
       </Suspense>
-      <Suspense fallback={<BookListSkeleton />}>
         <RecomendationsList />
-      </Suspense>
     </div>
   );
 };
