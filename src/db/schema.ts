@@ -3,6 +3,7 @@ import {
   boolean,
   integer,
   jsonb,
+  numeric,
   pgTable,
   text,
   timestamp,
@@ -80,6 +81,7 @@ export const libraryBooksTable = pgTable("libraryBooks", {
   reading_status: text({
     enum: ["not_started", "reading", "finished"],
   }).default("not_started"),
+  current_page: numeric().default('0'),
   notes: text(),
 });
 

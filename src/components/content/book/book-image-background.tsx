@@ -1,13 +1,49 @@
-"use client"
+"use client";
 // @ts-expect-error used because colorthief does not have type dependencies
 import ColorThief from "colorthief";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { cva,  } from "class-variance-authority";
 
-export function BookImageBackground({ image, title }:{image:string | null, title: string}) {
+const containerVariants = cva("relative overflow-hidden shadow-xl", {
+  variants: {
+    variant: {
+      default: "h-[85px] w-[85px] rounded-md",
+      bookDetails: "h-[300px] w-[300px] rounded-4xl",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
+
+const imageVariants = cva(
+  "absolute bottom-0 left-1/2 -translate-x-1/2",
+  {
+    variants: {
+      variant: {
+        default: "h-[80px] w-auto translate-y-[8px] rounded-xs",
+        bookDetails: "h-[300px] w-auto translate-y-[45px] rounded-md",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+export function BookImageBackground({
+  image,
+  title,
+  variant = "default",
+}: {
+  image: string | null;
+  title: string;
+  variant?: "default" | "bookDetails";
+}) {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [gradient, setGradient] = useState(
-    "linear-gradient(to bottom, #000000, #9ca3af)" // fallback: from black to gray-400
+    "linear-gradient(to bottom, #000000, #9ca3af)", // fallback: from black to gray-400
   );
 
   useEffect(() => {
@@ -43,7 +79,7 @@ export function BookImageBackground({ image, title }:{image:string | null, title
 
   return (
     <div
-      className="h-[85px] w-[85px] rounded-md relative overflow-hidden shadow-xl"
+      className={containerVariants({ variant })}
       style={{ background: gradient }}
     >
       <Image
@@ -51,7 +87,7 @@ export function BookImageBackground({ image, title }:{image:string | null, title
         alt={title}
         height={1920}
         width={1080}
-        className="h-[80px] w-auto absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[8px] rounded-xs"
+        className={imageVariants({ variant })}
       />
       {/* Hidden img for color extraction */}
       <img

@@ -51,7 +51,7 @@ const EditBookButton = ({ book }: { book: BookType }) => {
       <AlertDialog>
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">
-            <HiOutlineCog size={24} strokeWidth={1.5} />
+            <HiOutlineCog className="text-white" size={24} strokeWidth={1.5} />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"

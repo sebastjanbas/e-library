@@ -6,6 +6,7 @@ import { Building, CalendarDays, Ruler } from "lucide-react";
 import Image from "next/image";
 import React, {
   createContext,
+  CSSProperties,
   PropsWithChildren,
   useContext,
   useState,
@@ -42,9 +43,11 @@ export default function Book({
 
 Book.Image = function BookImage({
   className,
+  style,
   imageLink,
 }: {
   className?: string;
+  style?: CSSProperties;
   imageLink?: string;
 }) {
   const { bookInfo } = useBookContext();
@@ -59,30 +62,22 @@ Book.Image = function BookImage({
         "https://placehold.co/1280x1920/EEE/31343C/png?text=Image\nThumbnail&font=playfair-display"
       }
       alt={bookInfo.title}
+      style={style}
       className={className}
     />
   );
 };
 
-Book.Title = function BookTitle({
-  className,
-  children,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) {
+Book.Title = function BookTitle({ className }: { className?: string }) {
   const { bookInfo } = useBookContext();
   return (
     <h1
       className={cn(
-        "w-full text-center md:text-start text-2xl md:text-3xl font-semibold pb-1",
-        className
+        "w-full text-center md:text-start text-2xl md:text-4xl font-medium pb-1 tracking-wide",
+        className,
       )}
     >
-      <span className="flex flex-col-reverse md:inline-block md:space-x-8 gap-y-5 mr-16">
-        <span className="break-words">{bookInfo.title}</span>
-        {children}
-      </span>
+      {bookInfo.title}
     </h1>
   );
 };
@@ -90,7 +85,7 @@ Book.Title = function BookTitle({
 Book.Subtitle = function BookSubtitle() {
   const { bookInfo } = useBookContext();
   return (
-    <p className="w-full text-center md:text-start text-lg md:text-xl font-semibold pb-2">
+    <p className="w-full text-center md:text-start text-lg md:text-2xl font-medium tracking-wide pb-2">
       {bookInfo.subtitle ?? "Unknown"}
     </p>
   );
@@ -128,27 +123,25 @@ Book.Description2 = function BookDesctiption2() {
   const { bookInfo } = useBookContext();
 
   return (
-    <div className="inline-flex">
-      <div className="text-sm">
-        <h1 className="text-md font-semibold">Publisher Description</h1>
-        {bookInfo.description ? (
-          <>
-            <span>
-              {extended
-                ? bookInfo.description
-                : bookInfo.description?.slice(0, 150) + " ..."}
-            </span>{" "}
-            <button
-              className="cursor-pointer p-0 m-0 hover:underline"
-              onClick={() => setExtended(!extended)}
-            >
-              {extended ? "Less" : "More"}
-            </button>
-          </>
-        ) : (
-          <p>No description</p>
-        )}
-      </div>
+    <div className="flex flex-col text-sm">
+      <h1 className="text-md font-semibold">Publisher Description</h1>
+      {bookInfo.description ? (
+        <>
+          <span>
+            {extended
+              ? bookInfo.description
+              : bookInfo.description?.slice(0, 150)}
+          </span>{" "}
+          <button
+            className="cursor-pointer text-start p-0 m-0 text-foreground/50 italic hover:underline"
+            onClick={() => setExtended(!extended)}
+          >
+            {extended ? "Less" : "More"}
+          </button>
+        </>
+      ) : (
+        <p>No description</p>
+      )}
     </div>
   );
 };
