@@ -11,7 +11,7 @@ const BookDetailsPage = ({ params }: any) => {
       <Suspense fallback={<BookDetailsSkeleton />}>
         <BookServerDetails bookId={params.bookId} />
       </Suspense>
-        <RecomendationsList />
+      <RecomendationsList />
     </div>
   );
 };

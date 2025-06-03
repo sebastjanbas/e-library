@@ -1,8 +1,10 @@
 "use server";
-import BookDetailsClient from "./book-details-client";
+// import BookDetailsClient from "./book-details-client";
 import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
+import BookInfoCard from "./book-info-card";
+import Link from "next/link";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
   const db = await getDb();
@@ -33,7 +35,7 @@ export async function BookServerDetails({ bookId }: { bookId: string }) {
       .from(libraryBooksTable)
       .innerJoin(
         librariesTable,
-        eq(libraryBooksTable.library_id, librariesTable.id)
+        eq(libraryBooksTable.library_id, librariesTable.id),
       )
       .where(eq(libraryBooksTable.book_id, bookId));
   } catch (error) {
@@ -42,7 +44,11 @@ export async function BookServerDetails({ bookId }: { bookId: string }) {
   }
   return (
     <>
-      <BookDetailsClient book={book[0]} libraries={libraries} />
+      {/* <BookDetailsClient book={book[0]} libraries={libraries} /> */}
+      <BookInfoCard book={book[0]} />
+      <div>{libraries[0].reading_status}</div>
+      <Link href={`/rooms/${libraries[0].library.id}`}>{libraries[0].library.name}</Link>
+      <div>{libraries[0].current_page}</div>
     </>
   );
 }

@@ -3,13 +3,13 @@
 import ColorThief from "colorthief";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { cva,  } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 const containerVariants = cva("relative overflow-hidden shadow-xl", {
   variants: {
     variant: {
       default: "h-[85px] w-[85px] rounded-md",
-      bookDetails: "h-[300px] w-[300px] rounded-4xl",
+      bookDetails: "h-full w-full rounded-t-3xl",
     },
   },
   defaultVariants: {
@@ -17,20 +17,17 @@ const containerVariants = cva("relative overflow-hidden shadow-xl", {
   },
 });
 
-const imageVariants = cva(
-  "absolute bottom-0 left-1/2 -translate-x-1/2",
-  {
-    variants: {
-      variant: {
-        default: "h-[80px] w-auto translate-y-[8px] rounded-xs",
-        bookDetails: "h-[300px] w-auto translate-y-[45px] rounded-md",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
+const imageVariants = cva("absolute bottom-0 left-1/2 -translate-x-1/2 z-40", {
+  variants: {
+    variant: {
+      default: "h-[80px] w-auto translate-y-[8px] rounded-xs",
+      bookDetails: "h-[180px] w-auto translate-y-[28%] rounded-md",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
 export function BookImageBackground({
   image,
@@ -43,7 +40,7 @@ export function BookImageBackground({
 }) {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [gradient, setGradient] = useState(
-    "linear-gradient(to bottom, #000000, #9ca3af)", // fallback: from black to gray-400
+    "conic-gradient(from 180deg at 50% 50%, #2E2F30 0deg, #D2D7D8 360deg)",
   );
 
   useEffect(() => {
@@ -59,7 +56,9 @@ export function BookImageBackground({
 
         const topStr = `rgb(${top[0]}, ${top[1]}, ${top[2]})`;
         const bottomStr = `rgb(${bottom[0]}, ${bottom[1]}, ${bottom[2]})`;
-        setGradient(`linear-gradient(to bottom, ${topStr}, ${bottomStr})`);
+        setGradient(
+          `conic-gradient(from 180deg at 50% 50%, ${topStr} 0deg, ${bottomStr} 360deg)`,
+        );
       } catch (error) {
         console.error("Color extraction failed:", error);
       }
@@ -88,6 +87,7 @@ export function BookImageBackground({
         height={1920}
         width={1080}
         className={imageVariants({ variant })}
+        style={{boxShadow:' 0px 8px 20px 2px rgba(0, 0, 0, 0.50)'}}
       />
       {/* Hidden img for color extraction */}
       <img
