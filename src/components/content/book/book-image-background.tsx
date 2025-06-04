@@ -39,8 +39,9 @@ export function BookImageBackground({
   variant?: "default" | "bookDetails";
 }) {
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const [primaryColor, setPrimaryColor] = useState([0,0,0])
   const [gradient, setGradient] = useState(
-    "conic-gradient(from 180deg at 50% 50%, #2E2F30 0deg, #D2D7D8 360deg)",
+    "conic-gradient(from 180deg at 50% 80%, #2E2F30, #D2D7D8)",
   );
 
   useEffect(() => {
@@ -53,11 +54,12 @@ export function BookImageBackground({
         const palette = colorThief.getPalette(img, 6);
         const top = palette[0];
         const bottom = palette[1];
+        setPrimaryColor([0,0,0])
 
         const topStr = `rgb(${top[0]}, ${top[1]}, ${top[2]})`;
         const bottomStr = `rgb(${bottom[0]}, ${bottom[1]}, ${bottom[2]})`;
         setGradient(
-          `conic-gradient(from 180deg at 50% 50%, ${topStr} 0deg, ${bottomStr} 360deg)`,
+          `conic-gradient(from 180deg at 50% 80%, ${topStr}, ${bottomStr})`,
         );
       } catch (error) {
         console.error("Color extraction failed:", error);
@@ -87,7 +89,7 @@ export function BookImageBackground({
         height={1920}
         width={1080}
         className={imageVariants({ variant })}
-        style={{boxShadow:' 0px 8px 20px 2px rgba(0, 0, 0, 0.50)'}}
+        style={{boxShadow:`0px 8px 20px 4px rgba(${primaryColor[0]}, ${primaryColor[1]}, ${primaryColor[2]}, 0.3)`}}
       />
       {/* Hidden img for color extraction */}
       <img

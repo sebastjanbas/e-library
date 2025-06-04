@@ -4,7 +4,7 @@ import { booksTable, librariesTable, libraryBooksTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import BookInfoCard from "./book-info-card";
-import Link from "next/link";
+import BookProgressInfo from "./book-progress-info";
 
 export async function BookServerDetails({ bookId }: { bookId: string }) {
   const db = await getDb();
@@ -43,12 +43,10 @@ export async function BookServerDetails({ bookId }: { bookId: string }) {
     return <p className="text-destructive italic">Error loading books.</p>;
   }
   return (
-    <>
+    <div className="flex flex-col xl:flex-row justify-center gap-10 2xl:gap-20 items-start">
       {/* <BookDetailsClient book={book[0]} libraries={libraries} /> */}
       <BookInfoCard book={book[0]} />
-      <div>{libraries[0].reading_status}</div>
-      <Link href={`/rooms/${libraries[0].library.id}`}>{libraries[0].library.name}</Link>
-      <div>{libraries[0].current_page}</div>
-    </>
+      <BookProgressInfo totalPages={book[0].page_count ?? 0} readingInfo={libraries[0]} />
+    </div>
   );
 }
