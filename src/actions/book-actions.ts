@@ -8,7 +8,7 @@ import { and, eq, inArray, or } from "drizzle-orm";
 
 export const saveBook = async (
   values: z.infer<typeof BookSchema>,
-  library: string
+  library: string,
 ) => {
   const { userId } = await auth();
   if (!userId) {
@@ -26,10 +26,10 @@ export const saveBook = async (
         and(
           or(
             eq(booksTable.isbn_13, values.isbn13),
-            eq(booksTable.isbn_10, values.isbn10)
+            eq(booksTable.isbn_10, values.isbn10),
           ),
-          eq(booksTable.user_id, userId)
-        )
+          eq(booksTable.user_id, userId),
+        ),
       );
   } catch (error) {
     return {
@@ -50,8 +50,8 @@ export const saveBook = async (
         .where(
           and(
             inArray(libraryBooksTable.book_id, existingBookIds),
-            eq(libraryBooksTable.library_id, library)
-          )
+            eq(libraryBooksTable.library_id, library),
+          ),
         );
 
       if (existingLinks.length > 0) {
@@ -123,7 +123,7 @@ export const saveBook = async (
 
 export const updateBookInfo = async (
   values: z.infer<typeof BookSchema>,
-  id: string
+  id: string,
 ) => {
   const db = await getDb();
   const updatedData = {
@@ -201,10 +201,24 @@ export const updateReadingStatus = async (status: string, id: string) => {
   try {
     await db
       .update(libraryBooksTable)
-      .set({ reading_status: status as "not_started" | "reading" | "finished"})
+      .set({ reading_status: status as "not_started" | "reading" | "finished" })
       .where(eq(libraryBooksTable.book_id, id));
   } catch (error) {
     console.error(error);
     return { error: "Error updating reading status" };
   }
+};
+
+export const updateCurrentPage = async (newPage: number, id: string) => {
+  const db = await getDb();
+  try {
+    await db
+      .update(libraryBooksTable)
+      .set({ current_page: newPage.toString() })
+      .where(eq(libraryBooksTable.id, id));
+  } catch (error) {
+    console.error(error);
+    return { error: "Error updating page number" };
+  }
+  return { success: "Successfully updated page number" };
 };

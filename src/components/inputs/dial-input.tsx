@@ -6,11 +6,13 @@ export default function DialInput({
   max = 100,
   step = 1,
   initialValue = 0,
+  handleSubmitAction,
 }: {
   min?: number;
   max?: number;
   step?: number;
   initialValue?: number;
+  handleSubmitAction: (val: number) => void;
 }) {
   const [value, setValue] = useState(initialValue);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,18 +61,6 @@ export default function DialInput({
       setValue(clamped);
     }
     setIsEditing(false);
-  };
-
-  const handleSubmit = async (val: number) => {
-    setIsSubmitting(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Submitted value to server: ", val);
-    } catch (err) {
-      console.error("Failed to submit value", err);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
@@ -151,7 +141,11 @@ export default function DialInput({
       </div>
       {/* Submit Button */}
       <button
-        onClick={() => handleSubmit(value)}
+        onClick={() => {
+          setIsSubmitting(true);
+          handleSubmitAction(value);
+          setIsSubmitting(false);
+        }}
         disabled={isSubmitting}
         className="cursor-pointer mt-2 px-5 py-2 rounded-full text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300 ease-in-out disabled:opacity-50"
       >

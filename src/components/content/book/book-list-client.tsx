@@ -8,12 +8,14 @@ import { useRouter } from "next/navigation";
 
 type BookListProps = {
   books: {
+    current_page: string | null;
     reading_status: "not_started" | "reading" | "finished" | null;
     book: {
       id: string;
       title: string;
       authors: string[] | null;
       image: string | null;
+      page_count: number | null;
     };
   }[];
 };
@@ -61,7 +63,7 @@ const BookListClient = ({ books }: BookListProps) => {
               <h4 className="text-foreground/60 italic">
                 {book.book.authors?.join(", ")}
               </h4>
-              <span className="text-xl">50%</span>
+              <span className={`${parseInt(book.current_page ?? "0") < 1 ? "hidden" : ""} font-medium text-lg`}>{book.current_page && book.book.page_count && Math.round(parseInt(book.current_page) / book.book.page_count * 100)}% <span className="text-sm text-foreground/50">finished</span></span>
             </div>
           </div>
           <div className="flex flex-row justify-between items-center gap-5">

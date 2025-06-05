@@ -24,6 +24,7 @@ export async function BookServerDetails({ bookId }: { bookId: string }) {
   try {
     libraries = await db
       .select({
+        id: libraryBooksTable.id,
         reading_status: libraryBooksTable.reading_status,
         current_page: libraryBooksTable.current_page,
         notes: libraryBooksTable.notes,
