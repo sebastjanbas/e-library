@@ -9,10 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Book, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import BookStartSessionButton from "./book-start-session";
 
 type ReadingProps = {
   id: string;
@@ -137,14 +138,7 @@ const BookProgressInfo = ({
           </div>
         </div>
       </>
-      <button
-        style={{
-          boxShadow: "0px 8px 20px 2px rgba(0, 0, 0, 0.25)",
-        }}
-        className="px-8 py-4 bg-[#3e3f40] text-white font-semibold rounded-full flex justify-center items-center gap-3 cursor-pointer md:hover:bg-[#3e3f40]/90 transition-colors duration-300 ease-in-out"
-      >
-        <Book /> Start Reading Session
-      </button>
+      <BookStartSessionButton />
       <div className="flex flex-row gap-5">
         <Link
           className="text-foreground/30 inline-flex gap-2 justify-center items-center hover:underline"
