@@ -22,7 +22,6 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 
 const DashboardNavbar = () => {
   const { user } = useUser();
-
   return (
     <div className="flex fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 w-full justify-center items-center">
       <div className="w-full max-w-5xl flex flex-row justify-between items-center px-6 py-3">

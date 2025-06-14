@@ -5,7 +5,6 @@ import React, { Suspense } from 'react'
 const RoomsPage = () => {
   return (
     <div className='mt-20 p-5'>
-      <h1>ROOM PAGE</h1>
       <Suspense fallback={<RoomListSkeletoon />}>
         <Roomlist />
       </Suspense>

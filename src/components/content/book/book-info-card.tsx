@@ -20,7 +20,7 @@ const BookInfoCard = ({ book }: {book: BookType}) => {
 
   return (
     <motion.div
-      className="w-[90%] md:w-[500px] overflow-hidden bg-white rounded-3xl h-fit relative transition-all duration-300 ease-in-out"
+      className="w-full max-w-xl overflow-hidden bg-white rounded-3xl h-fit relative transition-all duration-300 ease-in-out"
       style={{ boxShadow: "0px 8px 20px 2px rgba(0, 0, 0, 0.25)" }}
       layout
     >

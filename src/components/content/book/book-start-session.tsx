@@ -8,7 +8,8 @@ const BookStartSessionButton = () => {
     <div className="w-full flex justify-center items-center">
       {!showTimer ? (
         <button
-          onClick={() => setShowTimer(true)}
+          // onClick={() => setShowTimer(true)}
+          onClick={() => {}}
           style={{
             boxShadow: "0px 8px 20px 2px rgba(0, 0, 0, 0.25)",
           }}
