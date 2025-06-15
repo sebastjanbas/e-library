@@ -1,9 +1,9 @@
 import React from "react";
 import { toast } from "sonner";
-import RoomListToggle from "./room-display-toggle";
 import { getDb } from "@/db";
 import { librariesTable } from "@/db/schema";
 import { count } from "drizzle-orm";
+import LibraryList from "./library-list";
 
 const Roomlist = async () => {
   const db = await getDb();
@@ -15,10 +15,11 @@ const Roomlist = async () => {
       .from(librariesTable);
 
     [{ total }] = await db.select({ total: count() }).from(librariesTable);
+    // [{ total:bookNum}] = await db.select({total:count()}).from(libraryBooksTable).where(eq(libraryBooksTable.library_id, ))
   } catch (error) {
     toast.error(
       "Error getting rooms: " +
-        (error instanceof Error ? error.message : String(error))
+        (error instanceof Error ? error.message : String(error)),
     );
     return <p className="text-destructive italic">Error: {String(error)}</p>;
   }
@@ -26,7 +27,8 @@ const Roomlist = async () => {
   return (
     <>
       <h2>All items: {total}</h2>
-      <RoomListToggle data={libraries} />
+      {/* <RoomListToggle data={libraries} /> */}
+      <LibraryList libraries={libraries} />
     </>
   );
 };
