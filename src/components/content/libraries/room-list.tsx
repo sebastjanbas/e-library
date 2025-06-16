@@ -24,11 +24,24 @@ const Roomlist = async () => {
     return <p className="text-destructive italic">Error: {String(error)}</p>;
   }
 
+  // const dummyLibraries = [
+  //   {id: 1, name: "Lib1"},
+  //   {id: 2, name: "Lib2"},
+  //   {id: 3, name: "Lib3"},
+  //   {id: 4, name: "Lib4"},
+  //   {id: 5, name: "Lib5"},
+  //   {id: 6, name: "Lib6"},
+  //   {id: 7, name: "Lib7"},
+  //   {id: 8, name: "Lib8"},
+  //   {id: 9, name: "Lib9"},
+  //   {id: 10, name: "Lib10"},
+  // ]
+
   return (
     <>
-      <h2>All items: {total}</h2>
       {/* <RoomListToggle data={libraries} /> */}
       <LibraryList libraries={libraries} />
+      <p className="italic text-foreground/50 w-full flex justify-center items-center mt-8">{total} Libraries found</p>
     </>
   );
 };

@@ -16,8 +16,8 @@ const RoomsPage = () => {
                 <Filter size={20} className="text-foreground/50" /> Filter
               </span>
             </div>
-            <div className="w-full md:w-1/4">
-              <span className="w-full border-[1px] border-foreground/20 p-2 rounded-lg inline-flex gap-3 tracking-wider items-center cursor-text">
+            <div className="w-full md:w-fit">
+              <span className="w-full border-[1px] border-foreground/20 py-2 pl-2 pr-5 rounded-lg inline-flex gap-3 tracking-wider items-center cursor-text">
                 <Search size={20} className="text-foreground/50" /> Search Libraries 
                 . . .
               </span>

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,9 +20,31 @@ import {
   Users,
 } from "lucide-react";
 import { SignOutButton, useUser } from "@clerk/nextjs";
+import MobileNavigation from "@/components/utilities/mobile-navigation";
 
 const DashboardNavbar = () => {
   const { user } = useUser();
+  const [isTouchScreen, setIsTouchScreen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const match = window.matchMedia("(pointer: coarse)");
+    const handler = (e: MediaQueryListEvent) => setIsTouchScreen(e.matches);
+
+    setIsTouchScreen(match.matches);
+    match.addEventListener("change", handler);
+
+    return () => match.removeEventListener("change", handler);
+  }, []);
+
+  if (isTouchScreen) {
+    return <MobileNavigation user={user} />;
+  }
+
+  return <DesktopNavbar user={user} />;
+};
+
+export default DashboardNavbar;
+const DesktopNavbar = ({user}: {user: any}) => {
   return (
     <div className="flex fixed z-50 overflow-hidden top-0 inset-0 bg-background/90 h-20 w-full justify-center items-center">
       <div className="w-full max-w-5xl flex flex-row justify-between items-center px-6 py-3">
@@ -34,7 +57,7 @@ const DashboardNavbar = () => {
               alt="Company Logo"
             />
           </Link>
-          <div className="hidden md:flex flex-row items-center gap-8">
+          <div className="flex flex-row items-center gap-8">
             <Link
               href={"/"}
               className="text-foreground hover:text-foreground/60"
@@ -57,17 +80,17 @@ const DashboardNavbar = () => {
               href={"#"}
               className="text-foreground hover:text-foreground/60"
             >
-              Goals
-            </Link>
-            <Link
-              href={"#"}
-              className="text-foreground hover:text-foreground/60"
-            >
               Notes
             </Link>
             <Link
               href={"#"}
-              className="text-foreground hover:text-foreground/60"
+              className="hidden sm:block text-foreground hover:text-foreground/60"
+            >
+              Goals
+            </Link>
+            <Link
+              href={"#"}
+              className="hidden sm:block text-foreground hover:text-foreground/60"
             >
               Achievements
             </Link>
@@ -136,5 +159,3 @@ const DashboardNavbar = () => {
     </div>
   );
 };
-
-export default DashboardNavbar;
