@@ -16,12 +16,12 @@ const BookList = async () => {
     return <p className="text-destructive italic">Error loading books.</p>;
   }
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <span className="italic text-foreground/50">
         Books owned: {total}
       </span>
       <BookListClient />
-    </>
+    </div>
   );
 };
 

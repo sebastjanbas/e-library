@@ -25,7 +25,8 @@ export async function GET(req: NextRequest) {
       .from(libraryBooksTable)
       .innerJoin(booksTable, eq(libraryBooksTable.book_id, booksTable.id))
       .offset(offset)
-      .limit(limit);
+      .limit(limit)
+      .orderBy(booksTable.title);
 
     const [{ total }] = await db.select({ total: count() }).from(booksTable);
 

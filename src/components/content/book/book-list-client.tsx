@@ -2,21 +2,22 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { badgeStatus } from "@/lib/docs";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Search } from "lucide-react";
 import { BookImageBackground } from "./book-image-background";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 type Book = {
-    current_page: string | null;
-    reading_status: "not_started" | "reading" | "finished" | null;
-    book: {
-      id: string;
-      title: string;
-      authors: string[] | null;
-      image: string | null;
-      page_count: number | null;
-    };
-  }[];
+  current_page: string | null;
+  reading_status: "not_started" | "reading" | "finished" | null;
+  book: {
+    id: string;
+    title: string;
+    authors: string[] | null;
+    image: string | null;
+    page_count: number | null;
+  };
+}[];
 
 const BookListClient = () => {
   const router = useRouter();
@@ -24,6 +25,8 @@ const BookListClient = () => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [allLoaded, setAllLoaded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
   const loadBooks = useCallback(async () => {
     if (loading || allLoaded) return;
@@ -44,12 +47,6 @@ const BookListClient = () => {
     setLoading(false);
   }, [offset, loading, allLoaded]);
 
-  // useEffect(() => {
-  //   loadBooks();
-  // }, []);
-
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     if (allLoaded) return;
     const observer = new IntersectionObserver(
@@ -66,6 +63,19 @@ const BookListClient = () => {
 
   return (
     <>
+      <span className="w-full max-w-2xl px-2 border-[1px] border-foreground/20 rounded-lg inline-flex gap-3 tracking-wider items-center cursor-text">
+        <Search size={20} className="text-foreground/50" />
+        <Input
+          type="text"
+          value={searchQuery}
+          autoComplete="off"
+          placeholder="Search Books ..."
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-full p-2 !focus:ring-0 !focus:outline-none !ring-transparent !outline-none border-none"
+        />
+      </span>
+      {searchQuery}
+
       <ul className="flex flex-col lg:grid lg:grid-cols-2 gap-5">
         {books.map((book, i) => (
           <li
