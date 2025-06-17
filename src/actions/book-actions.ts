@@ -170,6 +170,33 @@ export const removeBook = async (id: string) => {
   }
 };
 
+export const updateReadingStatus = async (status: string, id: string) => {
+  const db = await getDb();
+  try {
+    await db
+      .update(libraryBooksTable)
+      .set({ reading_status: status as "not_started" | "reading" | "finished" })
+      .where(eq(libraryBooksTable.book_id, id));
+  } catch (error) {
+    console.error(error);
+    return { error: "Error updating reading status" };
+  }
+};
+
+export const updateCurrentPage = async (newPage: number, id: string) => {
+  const db = await getDb();
+  try {
+    await db
+      .update(libraryBooksTable)
+      .set({ current_page: newPage.toString() })
+      .where(eq(libraryBooksTable.id, id));
+  } catch (error) {
+    console.error(error);
+    return { error: "Error updating page number" };
+  }
+  return { success: "Successfully updated page number" };
+};
+
 export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
   const { userId } = await auth();
   if (!userId) {
@@ -196,29 +223,38 @@ export const createLibrary = async (values: z.infer<typeof LibraryType>) => {
   }
 };
 
-export const updateReadingStatus = async (status: string, id: string) => {
-  const db = await getDb();
-  try {
-    await db
-      .update(libraryBooksTable)
-      .set({ reading_status: status as "not_started" | "reading" | "finished" })
-      .where(eq(libraryBooksTable.book_id, id));
-  } catch (error) {
-    console.error(error);
-    return { error: "Error updating reading status" };
-  }
-};
+export const deleteLibray = async (libraryId: string) => {
+  const { userId } = await auth();
 
-export const updateCurrentPage = async (newPage: number, id: string) => {
-  const db = await getDb();
-  try {
-    await db
-      .update(libraryBooksTable)
-      .set({ current_page: newPage.toString() })
-      .where(eq(libraryBooksTable.id, id));
-  } catch (error) {
-    console.error(error);
-    return { error: "Error updating page number" };
+  if (!userId) {
+    return { error: "User not authenticated!" };
   }
-  return { success: "Successfully updated page number" };
+
+  console.log("Delete triggered");
+
+  const db = await getDb();
+
+  try {
+    const booksToDelete = await db
+      .select({
+        id: libraryBooksTable.book_id,
+      })
+      .from(libraryBooksTable)
+      .where(eq(libraryBooksTable.library_id, libraryId));
+
+    booksToDelete.map(async (book) => {
+      // console.log("Deleting: ", book.id);
+      await db.delete(booksTable).where(eq(booksTable.id, book.id));
+    });
+    // console.log("BOOKS SUCCESFULLY DELETED!");
+    await db.delete(librariesTable).where(eq(librariesTable.id, libraryId));
+    // console.log("SUCCESS!");
+    return {success: "Library and it's contents have been deleted successfully"}
+  } catch (error) {
+    return {
+      error:
+        "Error deleting the library: " +
+        (error instanceof Error ? error.message : String(error)),
+    };
+  }
 };

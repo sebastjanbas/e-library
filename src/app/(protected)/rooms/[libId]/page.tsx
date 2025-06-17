@@ -4,12 +4,10 @@ import LibraryInfoSkeleton from "@/components/content/skeletons/library-info-ske
 import React, { Suspense } from "react";
 
 const LibPage = ({ params }: any) => {
-
-
   return (
     <div className="mt-20 p-5">
       <Suspense fallback={<LibraryInfoSkeleton />}>
-      <LibraryInfo libId={params.libId} />
+        <LibraryInfo libId={params.libId} />
       </Suspense>
     </div>
   );

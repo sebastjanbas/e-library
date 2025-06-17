@@ -26,12 +26,12 @@ const LibraryInfoTable = ({ libraryBooks }: any) => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-const booksForSearch = libraryBooks
-  ?.sort((a:any, b:any) => a.book.title.localeCompare(b.book.title))
-  .map((item: any) => ({
-    ...item.book,
-    reading_status: item.reading_status,
-  }));
+  const booksForSearch = libraryBooks
+    ?.sort((a: any, b: any) => a.book.title.localeCompare(b.book.title))
+    .map((item: any) => ({
+      ...item.book,
+      reading_status: item.reading_status,
+    }));
 
   const fuse = new Fuse(booksForSearch ?? [], {
     keys: ["title", "authors"],

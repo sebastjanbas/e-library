@@ -20,7 +20,7 @@ import { createLibrary } from "@/actions/book-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-const LibraryForm = ({onSuccess}: {onSuccess: () => void}) => {
+const LibraryForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -41,7 +41,9 @@ const LibraryForm = ({onSuccess}: {onSuccess: () => void}) => {
       toast.error(response.error);
     } else {
       toast.success(response.success);
-      onSuccess();
+      if (onSuccess) {
+        onSuccess();
+      }
       router.refresh();
     }
 
