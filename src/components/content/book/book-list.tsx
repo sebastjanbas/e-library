@@ -1,27 +1,24 @@
-import { getDb } from "@/db";
-import { booksTable } from "@/db/schema";
-import { count } from "drizzle-orm";
+// import { getDb } from "@/db";
+// import { booksTable } from "@/db/schema";
+// import { count } from "drizzle-orm";
 import React from "react";
 import BookListClient from "./book-list-client";
 
 const BookList = async () => {
-  const db = await getDb();
-  // const wait = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms))
-  let total = 0;
-  try {
-    // await wait(5000)
-    [{ total }] = await db.select({ total: count() }).from(booksTable);
-  } catch (error) {
-    console.error(error);
-    return <p className="text-destructive italic">Error loading books.</p>;
-  }
+  // const db = await getDb();
+  // // const wait = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms))
+  // let total = 0;
+  // try {
+  //   // await wait(5000)
+  //   [{ total }] = await db.select({ total: count() }).from(booksTable);
+  // } catch (error) {
+  //   console.error(error);
+  //   return <p className="text-destructive italic">Error loading books.</p>;
+  // }
   return (
-    <div className="flex flex-col gap-3">
-      <span className="italic text-foreground/50">
-        Books owned: {total}
-      </span>
+    <>
       <BookListClient />
-    </div>
+    </>
   );
 };
 
